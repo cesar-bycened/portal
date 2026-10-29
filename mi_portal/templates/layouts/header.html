@@ -1,0 +1,256 @@
+{% load static %}
+<style>
+.sigen-navbar {
+    --sigen-brand: #0c3f63;
+    background: var(--sigen-brand);
+    box-shadow: 0 3px 14px rgba(12, 39, 60, .12);
+    padding-block: .65rem;
+}
+.sigen-navbar *, .sigen-navbar *::before, .sigen-navbar *::after { box-sizing: border-box; }
+.sigen-navbar .sigen-navbar-container { column-gap: 1.5rem; }
+.sigen-navbar .navbar-brand { margin: 0; padding: 0; flex-shrink: 0; }
+.sigen-navbar .sigen-brand-logo {
+    display: flex; align-items: center; justify-content: center;
+    width: 50px; height: 54px; border-radius: 12px; background: #fff; flex-shrink: 0;
+}
+.sigen-navbar .sigen-brand-logo img { display: block; object-fit: contain; }
+.sigen-navbar .sigen-brand-copy { display: flex; flex-direction: column; line-height: 1.3; }
+.sigen-navbar .sigen-brand-title { color: #fff; font-size: 1.2rem; font-weight: 700; letter-spacing: -.015em; }
+.sigen-navbar .sigen-brand-subtitle { font-size: .75rem; color: #d4e4ef; }
+.sigen-navbar .navbar-collapse { min-width: 0; }
+.sigen-navbar .sigen-main-links { gap: .3rem; }
+.sigen-navbar .nav-link {
+    display: flex; align-items: center; gap: .45rem;
+    min-height: 44px; padding: .65rem .8rem;
+    color: #dfebf4; font-size: .875rem; border-radius: 10px;
+}
+.sigen-navbar .nav-link i { flex-shrink: 0; }
+.sigen-navbar .nav-link:hover { background: rgba(255, 255, 255, .09); color: #fff; }
+.sigen-navbar .nav-link.active, .sigen-navbar .nav-link[aria-current="page"] {
+    background: #fff; color: var(--sigen-brand); font-weight: 600;
+}
+.sigen-navbar .sigen-account-toggle {
+    width: 100%; gap: .65rem; border: 1px solid rgba(255, 255, 255, .22);
+    background: rgba(255, 255, 255, .05); text-align: left;
+    padding: .45rem .7rem; font: inherit;
+}
+.sigen-navbar .sigen-account-toggle::after { margin-left: .3rem; flex-shrink: 0; }
+.sigen-navbar .sigen-user-avatar {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; flex-shrink: 0;
+    border-radius: 50%; background: #e8f1f7; color: var(--sigen-brand);
+}
+.sigen-navbar .sigen-user-copy { display: flex; flex-direction: column; min-width: 0; flex: 1; line-height: 1.5; }
+.sigen-navbar .sigen-user-name { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .8125rem; font-weight: 600; }
+.sigen-navbar .sigen-user-role { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #d4e4ef; font-size: .7rem; }
+.sigen-navbar .sigen-account-menu {
+    width: 300px; max-width: calc(100vw - 2rem); padding: .5rem;
+    border: 1px solid #e0e7ef; border-radius: 14px;
+    box-shadow: 0 12px 35px rgba(15, 40, 62, .16); margin-top: .6rem;
+}
+.sigen-navbar .sigen-account-summary { display: flex; flex-direction: column; gap: .25rem; padding: .7rem .75rem .85rem; color: #526477; font-size: .8125rem; overflow-wrap: anywhere; }
+.sigen-navbar .sigen-account-summary strong { color: #172b3d; font-weight: 600; }
+.sigen-navbar .sigen-account-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; }
+.sigen-navbar .dropdown-item { min-height: 44px; display: flex; align-items: center; border-radius: 8px; padding: .65rem .75rem; font-size: .875rem; white-space: normal; }
+.sigen-navbar .dropdown-item:hover, .sigen-navbar .dropdown-item[aria-current="page"] { background: #edf4f9; color: var(--sigen-brand); }
+.sigen-navbar .dropdown-item.text-danger { color: #b42318 !important; }
+.sigen-navbar .dropdown-item.text-danger:hover { background: #fff0ee; }
+.sigen-navbar .sigen-menu-toggle { display: flex; align-items: center; gap: .45rem; min-height: 44px; border: 1px solid rgba(255, 255, 255, .4); border-radius: 9px; color: #fff; }
+.sigen-navbar .sigen-menu-label { font-size: .8125rem; }
+.sigen-navbar .btn-light { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; color: var(--sigen-brand); font-weight: 600; }
+.sigen-navbar :is(a, button):focus-visible { outline: 3px solid #f6ca69; outline-offset: 3px; box-shadow: none; }
+.sigen-navbar .dropdown-menu :is(a, button):focus-visible { outline-color: #1674b5; }
+@media (min-width: 1200px) {
+    .sigen-navbar .sigen-menu-toggle { display: none; }
+    .sigen-navbar .navbar-collapse { gap: 1rem; align-items: center; }
+    .sigen-navbar .sigen-main-links { flex: 1; flex-wrap: wrap; justify-content: center; align-items: center; }
+    .sigen-navbar .sigen-account-nav { flex-shrink: 0; padding-left: 1rem; border-left: 1px solid rgba(255, 255, 255, .25); }
+}
+@media (max-width: 1199.98px) {
+    .sigen-navbar .navbar-collapse.show { max-height: calc(100vh - 90px); max-height: calc(100dvh - 90px); overflow-y: auto; overscroll-behavior: contain; }
+    .sigen-navbar .sigen-main-links { padding: 1rem .25rem .75rem; }
+    .sigen-navbar .sigen-account-nav { padding: .85rem .25rem .35rem; border-top: 1px solid rgba(255, 255, 255, .25); }
+    .sigen-navbar .sigen-user-name, .sigen-navbar .sigen-user-role { max-width: none; }
+    .sigen-navbar .sigen-account-menu { width: 100%; max-width: 100%; box-shadow: none; }
+    .sigen-navbar .sigen-account-menu.show { position: static !important; transform: none !important; }
+}
+@media (max-width: 359.98px) {
+    .sigen-navbar .sigen-menu-label { display: none; }
+    .sigen-navbar .sigen-navbar-container { column-gap: .5rem; }
+}
+</style>
+<nav class="navbar navbar-expand-xl navbar-dark sticky-top sigen-navbar" aria-label="Navegación principal">
+    <div class="container sigen-navbar-container">
+        <!-- Logo / Marca -->
+        {% if request.user.is_authenticated %}
+            {% if request.user.es_aspirante %}
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'aspirante_dashboard' %}" {% if request.resolver_match.url_name == 'aspirante_dashboard' %}aria-current="page"{% endif %}>
+            {% elif request.user.es_admin_control_escolar %}
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'programas' %}" {% if request.resolver_match.url_name == 'programas' %}aria-current="page"{% endif %}>
+            {% elif request.user.es_admin_aspirantes %}
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'convocatorias_list' %}" {% if request.resolver_match.url_name == 'convocatorias_list' %}aria-current="page"{% endif %}>
+            {% else %}
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'post_login_redirect' %}">
+            {% endif %}
+        {% else %}
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'login_aspirante' %}">
+        {% endif %}
+            <span class="sigen-brand-logo"><img src="{% static 'images/logo.png' %}" width="40" height="46" alt="Escudo de ByCENED"></span>
+            <span class="sigen-brand-copy"><span class="sigen-brand-title">SiGeN</span><span class="sigen-brand-subtitle">ByCENED</span></span>
+        </a>
+        <!-- Botón responsive -->
+        <button 
+            class="navbar-toggler sigen-menu-toggle" 
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#navbarMain" 
+            aria-controls="navbarMain" 
+            aria-expanded="false" 
+            aria-label="Mostrar u ocultar navegación"
+        >
+            <span class="navbar-toggler-icon" aria-hidden="true"></span><span class="sigen-menu-label">Menú</span>
+        </button>
+        <!-- Contenido -->
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav sigen-main-links">
+                {% if request.user.is_authenticated %}
+                    <!-- ========================= -->
+                    <!-- MENÚ ASPIRANTE -->
+                    <!-- ========================= -->
+                    {% if request.user.es_aspirante %}
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link px-3 {% if request.resolver_match.url_name == 'aspirante_dashboard' %}active fw-semibold{% endif %}" 
+                                href="{% url 'aspirante_dashboard' %}" {% if request.resolver_match.url_name == 'aspirante_dashboard' %}aria-current="page"{% endif %}
+                            >
+                                <i aria-hidden="true" class="bi bi-speedometer2 me-1"></i>
+                                Mi panel
+                            </a>
+                        </li>
+                        {% comment %} <li class="nav-item">
+                            <a 
+                                class="nav-link px-3 {% if request.resolver_match.url_name == 'aspirante_convocatorias_list' %}active fw-semibold{% endif %}" 
+                                href="{% url 'aspirante_convocatorias_list' %}" {% if request.resolver_match.url_name == 'aspirante_convocatorias_list' %}aria-current="page"{% endif %}
+                            >
+                                <i aria-hidden="true" class="bi bi-megaphone me-1"></i>
+                                Convocatorias
+                            </a>
+                        </li> {% endcomment %}
+                        
+                    {% endif %}
+                    <!-- ========================= -->
+                    <!-- MENÚ ADMIN ASPIRANTES -->
+                    <!-- ========================= -->
+                    {% if request.user.es_admin_aspirantes %}
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link px-3 {% if request.resolver_match.url_name == 'convocatorias_list' %}active fw-semibold{% endif %}" 
+                                href="{% url 'convocatorias_list' %}" {% if request.resolver_match.url_name == 'convocatorias_list' %}aria-current="page"{% endif %}
+                            >
+                                <i aria-hidden="true" class="bi bi-megaphone me-1"></i>
+                                Convocatorias
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 {% if request.resolver_match.url_name == 'admin_solicitudes_list' %}active fw-semibold{% endif %}" 
+                                href="{% url 'admin_solicitudes_list' %}" {% if request.resolver_match.url_name == 'admin_solicitudes_list' %}aria-current="page"{% endif %}>
+                                <i aria-hidden="true" class="bi bi-people me-1"></i>
+                                Aspirantes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link px-3 {% if request.resolver_match.url_name == 'admin_aspirantes_estadisticas' %}active fw-semibold{% endif %}" 
+                                href="{% url 'admin_aspirantes_estadisticas' %}" {% if request.resolver_match.url_name == 'admin_aspirantes_estadisticas' %}aria-current="page"{% endif %}
+                            >
+                                <i aria-hidden="true" class="bi bi-bar-chart me-1"></i>
+                                Estadísticas
+                            </a>
+                        </li>
+                        
+                    {% endif %}
+                    <!-- ========================= -->
+                    <!-- MENÚ CONTROL ESCOLAR -->
+                    <!-- ========================= -->
+                    {% if request.user.es_admin_control_escolar %}
+                        <li class="nav-item">
+                            <a 
+                                class="nav-link px-3 {% if request.resolver_match.url_name == 'programas' %}active fw-semibold{% endif %}" 
+                                href="{% url 'programas' %}" {% if request.resolver_match.url_name == 'programas' %}aria-current="page"{% endif %}
+                            >
+                                <i aria-hidden="true" class="bi bi-grid me-1"></i>
+                                Programas
+                            </a>
+                        </li>
+                        
+                    {% endif %}
+                    <!-- ========================= -->
+                    <!-- SUPERADMIN / ADMIN DJANGO -->
+                    <!-- ========================= -->
+                    {% if request.user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="{% url 'admin:index' %}">
+                                <i aria-hidden="true" class="bi bi-shield-lock me-1"></i>
+                                Admin Django
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav sigen-account-nav">
+                    <!-- Usuario -->
+                    <li class="nav-item dropdown">
+                        <button class="nav-link dropdown-toggle sigen-account-toggle" type="button" id="sigenAccountToggle" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="sigenAccountMenu">
+                            <span class="sigen-user-avatar"><i aria-hidden="true" class="bi bi-person-fill"></i></span>
+                            <span class="sigen-user-copy"><span class="sigen-user-name">{{ request.user.get_full_name|default:request.user }}</span><span class="sigen-user-role">{{ request.user.get_rol_display|default:"Mi cuenta" }}</span></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end sigen-account-menu" id="sigenAccountMenu" aria-labelledby="sigenAccountToggle">
+                            <li class="sigen-account-summary">
+                                <span class="sigen-account-label">Mi cuenta</span>
+                                <strong>{{ request.user.get_full_name|default:request.user }}</strong>
+                                {% if request.user.email %}<span>{{ request.user.email }}</span>{% endif %}
+                            </li>
+                            {% if request.user.es_aspirante %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'perfil_usuario' %}" {% if request.resolver_match.url_name == 'perfil_usuario' %}aria-current="page"{% endif %}>
+                                        <i aria-hidden="true" class="bi bi-person me-2"></i>
+                                        Mi perfil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'perfil_aspirante' %}" {% if request.resolver_match.url_name == 'perfil_aspirante' %}aria-current="page"{% endif %}>
+                                        <i aria-hidden="true" class="bi bi-pencil-square me-2"></i>
+                                        Editar perfil
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <form method="post" action="{% url 'cerrar_sesion' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i aria-hidden="true" class="bi bi-box-arrow-right me-2"></i>
+                                        Cerrar sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <!-- USUARIO NO AUTENTICADO -->
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="{% url 'login_aspirante' %}">
+                            Aspirantes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-light btn-sm px-3 ms-xl-2" href="{% url 'login_comunidad' %}">
+                            Comunidad universitaria
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

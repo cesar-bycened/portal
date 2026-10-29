@@ -1,0 +1,348 @@
+{% extends "layouts/main.html" %}
+{% load static socialaccount %}
+
+{% block title %}Portal de Aspirantes{% endblock %}
+
+{% block content %}
+<style>
+    .aspirantes-login {
+        --brand: #0c3f63;
+        --ink: #172b3d;
+        --muted: #526477;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        background: #f3f6fa;
+        color: var(--ink);
+    }
+    .aspirantes-login *, .aspirantes-login *::before,
+    .aspirantes-login *::after { box-sizing: border-box; }
+    .aspirantes-login .access-header {
+        background: #fff;
+        border-bottom: 1px solid #e2e8ef;
+    }
+    .aspirantes-login .brand-lockup {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        max-width: 42rem;
+    }
+    .aspirantes-login .brand-logo {
+        width: 54px;
+        height: 62px;
+        flex-shrink: 0;
+        object-fit: contain;
+    }
+    .aspirantes-login .brand-name {
+        display: block;
+        font-size: 1.125rem;
+        color: var(--brand);
+        letter-spacing: .02em;
+    }
+    .aspirantes-login .brand-description {
+        margin: .15rem 0 0;
+        color: var(--muted);
+        font-size: .8125rem;
+        line-height: 1.5;
+        max-width: 31rem;
+    }
+    .aspirantes-login .access-main {
+        flex: 1 0 auto;
+        display: flex;
+        align-items: center;
+        padding-block: clamp(1.5rem, 4vw, 3.5rem);
+    }
+    .aspirantes-login .access-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        max-width: 32rem;
+        margin-inline: auto;
+        background: #fff;
+        border: 1px solid #e0e7ef;
+        border-radius: 24px;
+        box-shadow: 0 16px 48px rgba(21, 48, 73, .08);
+        overflow: hidden;
+    }
+    .aspirantes-login .access-form {
+        min-width: 0;
+        padding: clamp(1.5rem, 4vw, 3rem);
+        align-self: center;
+    }
+    .aspirantes-login .eyebrow {
+        display: inline-block;
+        margin-bottom: 1rem;
+        padding: .4rem .75rem;
+        border-radius: 50rem;
+        background: #edf4f9;
+        color: var(--brand);
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+    .aspirantes-login h1 {
+        font-size: clamp(1.75rem, 3vw, 2.25rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -.035em;
+        margin-bottom: .85rem;
+    }
+    .aspirantes-login .access-description {
+        color: var(--muted);
+        line-height: 1.65;
+        margin-bottom: 1.5rem;
+    }
+    .aspirantes-login .account-note {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border: 1px solid #dce8f1;
+        border-radius: 12px;
+        background: #f4f8fc;
+        font-size: .875rem;
+        line-height: 1.6;
+        color: var(--muted);
+    }
+    .aspirantes-login .account-note i { color: var(--brand); flex-shrink: 0; }
+    .aspirantes-login .account-note strong { color: var(--ink); }
+    .aspirantes-login .google-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .75rem;
+        width: 100%;
+        min-height: 52px;
+        padding: .85rem 1rem;
+        border: 1px solid #aebdcb;
+        border-radius: 12px;
+        background: #fff;
+        color: #263746;
+        font: inherit;
+        font-weight: 600;
+        line-height: 1.5;
+        transition: background-color .15s, border-color .15s;
+    }
+    .aspirantes-login .google-button:hover { background: #f1f5f9; border-color: var(--brand); }
+    .aspirantes-login .google-button svg { flex-shrink: 0; }
+    .aspirantes-login :is(a, button):focus-visible {
+        outline: 3px solid #1674b5;
+        outline-offset: 4px;
+    }
+    .aspirantes-login .community-access {
+        margin-top: 1.75rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e2e8ef;
+        text-align: center;
+    }
+    .aspirantes-login .community-access p {
+        color: var(--muted);
+        font-size: .8125rem;
+        margin-bottom: .35rem;
+    }
+    .aspirantes-login .community-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        min-height: 44px;
+        color: var(--brand);
+        font-size: .875rem;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+    .aspirantes-login .access-visual {
+        display: none;
+        min-width: 0;
+        padding: clamp(2rem, 4vw, 3.5rem);
+        color: #fff;
+        background-color: var(--brand);
+        background-image: linear-gradient(180deg, rgba(5, 28, 47, .38), rgba(5, 28, 47, .96)),
+            url("{% static 'images/DSC_0730.jpg' %}");
+        background-size: cover;
+        background-position: center;
+    }
+    .aspirantes-login .visual-content { max-width: 30rem; }
+    .aspirantes-login .visual-label {
+        font-size: .75rem;
+        font-weight: 600;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+    .aspirantes-login .visual-title {
+        font-size: clamp(2rem, 3.2vw, 2.8rem);
+        line-height: 1.15;
+        font-weight: 700;
+        letter-spacing: -.03em;
+        margin-bottom: 1rem;
+    }
+    .aspirantes-login .visual-description { line-height: 1.75; color: #e0eaf3; }
+    .aspirantes-login .visual-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .65rem 1.25rem;
+        padding: 1.25rem 0 0;
+        margin: 1.5rem 0 0;
+        list-style: none;
+        border-top: 1px solid rgba(255, 255, 255, .3);
+        font-size: .8125rem;
+    }
+    .aspirantes-login .visual-features i { margin-right: .35rem; }
+    .aspirantes-login .access-footer {
+        background: #102e45;
+        color: #cbd9e5;
+        font-size: .8125rem;
+        line-height: 1.65;
+    }
+    .aspirantes-login .footer-heading {
+        font-size: .875rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: .6rem;
+    }
+    .aspirantes-login .access-footer address { margin: 0; }
+    .aspirantes-login .access-footer a {
+        color: #e4eef7;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        overflow-wrap: anywhere;
+    }
+    .aspirantes-login .access-footer a:hover { color: #fff; }
+    .aspirantes-login .footer-contact a {
+        display: inline-flex;
+        align-items: center;
+        gap: .65rem;
+        min-height: 44px;
+    }
+    .aspirantes-login .footer-contact i { flex-shrink: 0; }
+    .aspirantes-login .footer-bottom {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: .5rem 1rem;
+        padding-block: 1rem;
+        border-top: 1px solid #365064;
+        font-size: .75rem;
+    }
+    @media (min-width: 992px) {
+        .aspirantes-login .access-shell {
+            max-width: 1140px;
+            grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+        }
+        .aspirantes-login .access-visual { display: flex; align-items: flex-end; }
+    }
+    @media (max-width: 575.98px) {
+        .aspirantes-login .brand-logo { width: 42px; height: 50px; }
+        .aspirantes-login .brand-description { font-size: .75rem; }
+        .aspirantes-login .access-shell { border-radius: 18px; }
+        .aspirantes-login .footer-bottom { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .aspirantes-login .google-button { transition: none; }
+    }
+</style>
+
+<div class="aspirantes-login">
+    <header class="access-header">
+        <div class="container py-3">
+            <div class="brand-lockup">
+                <img src="{% static 'images/logo.png' %}" alt="Escudo de ByCENED" class="brand-logo" width="54" height="62">
+                <div>
+                    <strong class="brand-name">ByCENED</strong>
+                    <p class="brand-description">Benemérita y Centenaria Escuela Normal del Estado de Durango</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="access-main">
+        <div class="container">
+            <div class="access-shell">
+                <section class="access-form" aria-labelledby="access-title">
+                    <span class="eyebrow">Proceso de admisión</span>
+                    <h1 id="access-title">Portal de Aspirantes</h1>
+                    <p class="access-description">Inicia sesión para consultar convocatorias y dar seguimiento a tu solicitud.</p>
+
+                    <div class="account-note" id="google-account-help">
+                        <i class="bi bi-info-circle" aria-hidden="true"></i>
+                        <div>Usa tu <strong>correo personal de Google</strong>. El correo institucional se asignará posteriormente si eres aceptado e inscrito.</div>
+                    </div>
+
+                    <form action="{% provider_login_url 'google' process='login' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="google-button" aria-describedby="google-account-help">
+                            <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                                <path fill="#FBBC05" d="M10.53 28.59A14.41 14.41 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.87 23.87 0 0 0 0 24c0 3.87.93 7.53 2.56 10.78l7.97-6.19z"/>
+                                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                            </svg>
+                            <span>Continuar con Google</span>
+                        </button>
+                    </form>
+
+                    <div class="community-access">
+                        <p>¿Eres alumno, docente o administrativo?</p>
+                        <a href="{% url 'login_comunidad' %}" class="community-link">
+                            <span>Ir a Comunidad Universitaria</span>
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="access-visual" aria-labelledby="visual-title">
+                    <div class="visual-content">
+                        <p class="visual-label">Tu futuro comienza aquí</p>
+                        <h2 class="visual-title" id="visual-title">Da el primer paso<br>en tu formación.</h2>
+                        <p class="visual-description mb-0">Completa tu perfil, carga tu expediente digital y sigue tu proceso de admisión desde un solo lugar.</p>
+                        <ul class="visual-features">
+                            <li><i class="bi bi-person-vcard" aria-hidden="true"></i>Tu perfil</li>
+                            <li><i class="bi bi-folder2-open" aria-hidden="true"></i>Tu expediente</li>
+                            <li><i class="bi bi-clipboard-check" aria-hidden="true"></i>Tu solicitud</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="access-footer">
+        <div class="container">
+            <div class="row g-4 py-4">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <h2 class="footer-heading">ByCENED · Portal de Aspirantes</h2>
+                    <p class="mb-0">Información y seguimiento de tu proceso de admisión.</p>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <h2 class="footer-heading">Ubicación</h2>
+                    <address>
+                        Calzada Escuela Normal S/N<br>
+                        Boulevard Lic. Armando del Castillo<br>
+                        Zona Centro, Durango, Dgo. C.P. 34000
+                    </address>
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                    <h2 class="footer-heading mb-1">Contacto</h2>
+                    <ul class="footer-contact list-unstyled mb-0">
+                        <li><a href="tel:+526188119478"><i class="bi bi-telephone" aria-hidden="true"></i><span>+52 (618) 811 9478</span></a></li>
+                        <li><a href="mailto:direccion.bycened@gmail.com"><i class="bi bi-envelope" aria-hidden="true"></i><span>direccion.bycened@gmail.com</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© {% now "Y" %} ByCENED</span>
+                <span>SiGEN · Portal institucional</span>
+            </div>
+            {% comment %}
+            Añadir el aviso de privacidad y las redes sociales cuando se disponga
+            de sus URLs reales. No se incluyen enlaces vacíos con href="#".
+            {% endcomment %}
+        </div>
+    </footer>
+</div>
+{% endblock %}

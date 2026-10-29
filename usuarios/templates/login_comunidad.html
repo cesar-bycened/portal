@@ -1,0 +1,443 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+
+{% block title %}Acceso Institucional{% endblock %}
+
+{% block content %}
+<style>
+    .comunidad-login {
+        --brand: #0c3f63;
+        --ink: #172b3d;
+        --muted: #526477;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        background: #f3f6fa;
+        color: var(--ink);
+    }
+    .comunidad-login *, .comunidad-login *::before,
+    .comunidad-login *::after { box-sizing: border-box; }
+    .comunidad-login .access-header {
+        background: #fff;
+        border-bottom: 1px solid #e2e8ef;
+    }
+    .comunidad-login .brand-lockup {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        max-width: 42rem;
+    }
+    .comunidad-login .brand-logo {
+        width: 54px;
+        height: 62px;
+        flex-shrink: 0;
+        object-fit: contain;
+    }
+    .comunidad-login .brand-name {
+        display: block;
+        font-size: 1.125rem;
+        color: var(--brand);
+        letter-spacing: .02em;
+    }
+    .comunidad-login .brand-description {
+        margin: .15rem 0 0;
+        color: var(--muted);
+        font-size: .8125rem;
+        line-height: 1.5;
+        max-width: 31rem;
+    }
+    .comunidad-login .access-main {
+        flex: 1 0 auto;
+        display: flex;
+        align-items: center;
+        padding-block: clamp(1.5rem, 4vw, 3.5rem);
+    }
+    .comunidad-login .access-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        max-width: 32rem;
+        margin-inline: auto;
+        background: #fff;
+        border: 1px solid #e0e7ef;
+        border-radius: 24px;
+        box-shadow: 0 16px 48px rgba(21, 48, 73, .08);
+        overflow: hidden;
+    }
+    .comunidad-login .access-form {
+        min-width: 0;
+        padding: clamp(1.5rem, 4vw, 3rem);
+        align-self: center;
+    }
+    .comunidad-login .eyebrow {
+        display: inline-block;
+        margin-bottom: 1rem;
+        padding: .4rem .75rem;
+        border-radius: 50rem;
+        background: #edf4f9;
+        color: var(--brand);
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+    .comunidad-login h1 {
+        font-size: clamp(1.75rem, 3vw, 2.25rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -.035em;
+        margin-bottom: .85rem;
+    }
+    .comunidad-login .access-description {
+        color: var(--muted);
+        line-height: 1.65;
+        margin-bottom: 1.5rem;
+    }
+    .comunidad-login .account-note {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border: 1px solid #dce8f1;
+        border-radius: 12px;
+        background: #f4f8fc;
+        font-size: .875rem;
+        line-height: 1.6;
+        color: var(--muted);
+    }
+    .comunidad-login .account-note i { color: var(--brand); flex-shrink: 0; }
+    .comunidad-login .account-note strong { color: var(--ink); }
+    .comunidad-login :is(a, button):focus-visible {
+        outline: 3px solid #1674b5;
+        outline-offset: 4px;
+    }
+    .comunidad-login .community-access {
+        margin-top: 1.75rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e2e8ef;
+        text-align: center;
+    }
+    .comunidad-login .community-access p {
+        color: var(--muted);
+        font-size: .8125rem;
+        margin-bottom: .35rem;
+    }
+    .comunidad-login .community-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        min-height: 44px;
+        color: var(--brand);
+        font-size: .875rem;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+    .comunidad-login .access-visual {
+        display: none;
+        min-width: 0;
+        padding: clamp(2rem, 4vw, 3.5rem);
+        color: #fff;
+        background-color: var(--brand);
+        background-image: linear-gradient(180deg, rgba(5, 28, 47, .38), rgba(5, 28, 47, .96)),
+            url("{% static 'images/DSC_0730.jpg' %}");
+        background-size: cover;
+        background-position: center;
+    }
+    .comunidad-login .visual-content { max-width: 30rem; }
+    .comunidad-login .visual-label {
+        font-size: .75rem;
+        font-weight: 600;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+    .comunidad-login .visual-title {
+        font-size: clamp(2rem, 3.2vw, 2.8rem);
+        line-height: 1.15;
+        font-weight: 700;
+        letter-spacing: -.03em;
+        margin-bottom: 1rem;
+    }
+    .comunidad-login .visual-description { line-height: 1.75; color: #e0eaf3; }
+    .comunidad-login .visual-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .65rem 1.25rem;
+        padding: 1.25rem 0 0;
+        margin: 1.5rem 0 0;
+        list-style: none;
+        border-top: 1px solid rgba(255, 255, 255, .3);
+        font-size: .8125rem;
+    }
+    .comunidad-login .visual-features i { margin-right: .35rem; }
+    .comunidad-login .access-footer {
+        background: #102e45;
+        color: #cbd9e5;
+        font-size: .8125rem;
+        line-height: 1.65;
+    }
+    .comunidad-login .footer-heading {
+        font-size: .875rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: .6rem;
+    }
+    .comunidad-login .access-footer address { margin: 0; }
+    .comunidad-login .access-footer a {
+        color: #e4eef7;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        overflow-wrap: anywhere;
+    }
+    .comunidad-login .access-footer a:hover { color: #fff; }
+    .comunidad-login .footer-contact a {
+        display: inline-flex;
+        align-items: center;
+        gap: .65rem;
+        min-height: 44px;
+    }
+    .comunidad-login .footer-contact i { flex-shrink: 0; }
+    .comunidad-login .footer-bottom {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: .5rem 1rem;
+        padding-block: 1rem;
+        border-top: 1px solid #365064;
+        font-size: .75rem;
+    }
+    .comunidad-login .role-badges {
+        display: flex; flex-wrap: wrap; gap: .5rem;
+        margin: 0 0 1.5rem; padding: 0; list-style: none;
+    }
+    .comunidad-login .role-badges li {
+        padding: .3rem .65rem; border-radius: 50rem;
+        background: #f1f5f9; color: #526477; font-size: .75rem;
+    }
+    .comunidad-login .field-label {
+        display: block; font-size: .875rem; font-weight: 600; margin-bottom: .5rem;
+    }
+    .comunidad-login .credential-group {
+        display: flex; align-items: stretch; width: 100%;
+        border: 1px solid #aebdcb; border-radius: 12px; background: #fff;
+    }
+    .comunidad-login .credential-group:focus-within {
+        border-color: #1674b5; outline: 3px solid #1674b5; outline-offset: 2px;
+    }
+    .comunidad-login .credential-group.has-errors { border-color: #b42318; }
+    .comunidad-login .field-icon {
+        display: flex; align-items: center; padding-left: 1rem;
+        color: var(--muted); flex-shrink: 0;
+    }
+    .comunidad-login .credential-group input {
+        flex: 1 1 0%; min-width: 0; width: 100%; min-height: 50px;
+        padding: .75rem; border: 0; border-radius: 12px;
+        background: transparent; color: var(--ink); font: inherit;
+        box-shadow: none;
+    }
+    .comunidad-login .credential-group input:focus { outline: none; box-shadow: none; }
+    .comunidad-login .password-toggle {
+        align-self: center; flex-shrink: 0; min-width: 44px; min-height: 44px;
+        margin-right: .2rem; padding: .5rem; border: 0; border-radius: 8px;
+        background: transparent; color: var(--brand);
+    }
+    .comunidad-login .password-toggle:hover { background: #edf4f9; }
+    .comunidad-login .field-errors { color: #b42318; font-size: .8125rem; margin-top: .5rem; }
+    .comunidad-login .field-help { color: var(--muted); font-size: .8125rem; margin-top: .5rem; }
+    .comunidad-login .institutional-button {
+        display: flex; align-items: center; justify-content: center; gap: .65rem;
+        width: 100%; min-height: 52px; padding: .85rem 1rem;
+        border: 1px solid var(--brand); border-radius: 12px;
+        background: var(--brand); color: #fff; font: inherit; font-weight: 600;
+        transition: background-color .15s;
+    }
+    .comunidad-login .institutional-button:hover { background: #082d47; }
+    .comunidad-login .access-help {
+        margin-top: 1rem; margin-bottom: 0; color: var(--muted);
+        font-size: .8125rem; line-height: 1.6;
+    }
+    @media (min-width: 992px) {
+        .comunidad-login .access-shell {
+            max-width: 1140px;
+            grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+        }
+        .comunidad-login .access-visual { display: flex; align-items: flex-end; }
+    }
+    @media (max-width: 575.98px) {
+        .comunidad-login .brand-logo { width: 42px; height: 50px; }
+        .comunidad-login .brand-description { font-size: .75rem; }
+        .comunidad-login .access-shell { border-radius: 18px; }
+        .comunidad-login .footer-bottom { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .comunidad-login .institutional-button { transition: none; }
+    }
+</style>
+
+<div class="comunidad-login">
+    <header class="access-header">
+        <div class="container py-3">
+            <div class="brand-lockup">
+                <img src="{% static 'images/logo.png' %}" alt="Escudo de ByCENED" class="brand-logo" width="54" height="62">
+                <div>
+                    <strong class="brand-name">ByCENED</strong>
+                    <p class="brand-description">Benemérita y Centenaria Escuela Normal del Estado de Durango</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="access-main">
+        <div class="container">
+            <div class="access-shell">
+                <section class="access-form" aria-labelledby="access-title">
+                    <span class="eyebrow">Comunidad ByCENED</span>
+                    <h1 id="access-title">Acceso Institucional</h1>
+                    <p class="access-description">Ingresa con tus credenciales institucionales.</p>
+                    <ul class="role-badges" aria-label="Acceso para la comunidad interna">
+                        <li>Alumnos</li><li>Docentes</li><li>Administrativos</li>
+                    </ul>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger small" role="alert">
+                            {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+                        </div>
+                    {% endif %}
+                    {% comment %}Los mensajes generales de Django se muestran en main.html mediante SweetAlert2.{% endcomment %}
+
+                    <form method="post" novalidate id="institutional-login-form">
+                        {% csrf_token %}
+                        {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                        <div class="mb-4" data-credential="username">
+                            <label for="{{ form.username.id_for_label }}" class="field-label">{{ form.username.label }}</label>
+                            <div class="credential-group{% if form.username.errors %} has-errors{% endif %}">
+                                <span class="field-icon"><i class="bi bi-person" aria-hidden="true"></i></span>
+                                {{ form.username }}
+                            </div>
+                            {% if form.username.help_text %}
+                                <div class="field-help" id="institutional-username-help">{{ form.username.help_text }}</div>
+                            {% endif %}
+                            {% if form.username.errors %}
+                                <div class="field-errors" id="institutional-username-errors" role="alert">
+                                    {% for error in form.username.errors %}<div>{{ error }}</div>{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4" data-credential="password">
+                            <label for="{{ form.password.id_for_label }}" class="field-label">{{ form.password.label }}</label>
+                            <div class="credential-group{% if form.password.errors %} has-errors{% endif %}">
+                                <span class="field-icon"><i class="bi bi-lock" aria-hidden="true"></i></span>
+                                {{ form.password }}
+                                <button type="button" class="password-toggle" id="password-toggle" aria-label="Mostrar contraseña" hidden>
+                                    <i class="bi bi-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            {% if form.password.help_text %}
+                                <div class="field-help" id="institutional-password-help">{{ form.password.help_text }}</div>
+                            {% endif %}
+                            {% if form.password.errors %}
+                                <div class="field-errors" id="institutional-password-errors" role="alert">
+                                    {% for error in form.password.errors %}<div>{{ error }}</div>{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="institutional-button">
+                            <span>Entrar al sistema</span><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                    <p class="access-help"><strong>¿Necesitas tus credenciales?</strong> Si eres personal de nuevo ingreso o alumno aceptado, acude a la Dirección Académica.</p>
+                    <div class="community-access">
+                        <p>¿Eres aspirante?</p>
+                        <a href="{% url 'login_asp' %}" class="community-link">
+                            <span>Inicia sesión con Google</span><i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="access-visual" aria-labelledby="visual-title">
+                    <div class="visual-content">
+                        <p class="visual-label">Sistema General de la Normal</p>
+                        <h2 class="visual-title" id="visual-title">Tu comunidad.<br>Un mismo espacio.</h2>
+                        <p class="visual-description mb-0">Bienvenido a SiGeN, el portal académico de la comunidad interna de la Benemérita y Centenaria Escuela Normal del Estado de Durango.</p>
+                        <ul class="visual-features">
+                            <li><i class="bi bi-mortarboard" aria-hidden="true"></i>Alumnos</li>
+                            <li><i class="bi bi-person-video3" aria-hidden="true"></i>Docentes</li>
+                            <li><i class="bi bi-building" aria-hidden="true"></i>Administrativos</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="access-footer">
+        <div class="container">
+            <div class="row g-4 py-4">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <h2 class="footer-heading">ByCENED · Comunidad Universitaria</h2>
+                    <p class="mb-0">Sistema General de la Normal. Acceso para la comunidad institucional.</p>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <h2 class="footer-heading">Ubicación</h2>
+                    <address>
+                        Calzada Escuela Normal S/N<br>
+                        Boulevard Lic. Armando del Castillo<br>
+                        Zona Centro, Durango, Dgo. C.P. 34000
+                    </address>
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                    <h2 class="footer-heading mb-1">Contacto</h2>
+                    <ul class="footer-contact list-unstyled mb-0">
+                        <li><a href="tel:+526188119478"><i class="bi bi-telephone" aria-hidden="true"></i><span>+52 (618) 811 9478</span></a></li>
+                        <li><a href="mailto:direccion.bycened@gmail.com"><i class="bi bi-envelope" aria-hidden="true"></i><span>direccion.bycened@gmail.com</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© {% now "Y" %} ByCENED</span>
+                <span>SiGeN · Portal institucional</span>
+            </div>
+            {% comment %}
+            Añadir el aviso de privacidad y las redes sociales cuando se disponga
+            de sus URLs reales. No se incluyen enlaces vacíos con href="#".
+            {% endcomment %}
+        </div>
+    </footer>
+</div>
+<script>
+    (() => {
+        const form = document.getElementById('institutional-login-form');
+        if (!form) return;
+        for (const name of ['username', 'password']) {
+            const group = form.querySelector('[data-credential="' + name + '"]');
+            const input = group?.querySelector('input:not([type="hidden"])');
+            if (!input) continue;
+            input.setAttribute('autocomplete', name === 'password' ? 'current-password' : 'username');
+            if (name === 'username') {
+                input.setAttribute('autocapitalize', 'none');
+                input.setAttribute('spellcheck', 'false');
+            }
+            const descriptions = new Set((input.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean));
+            for (const detail of group.querySelectorAll('.field-help, .field-errors')) descriptions.add(detail.id);
+            if (descriptions.size) input.setAttribute('aria-describedby', [...descriptions].join(' '));
+            if (group.querySelector('.field-errors')) input.setAttribute('aria-invalid', 'true');
+        }
+        const password = form.querySelector('[data-credential="password"] input[type="password"]');
+        const toggle = document.getElementById('password-toggle');
+        if (password && toggle) {
+            toggle.hidden = false;
+            if (password.id) toggle.setAttribute('aria-controls', password.id);
+            toggle.addEventListener('click', () => {
+                const show = password.type === 'password';
+                password.type = show ? 'text' : 'password';
+                toggle.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+                toggle.querySelector('i').className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+            });
+        }
+    })();
+</script>
+{% endblock %}

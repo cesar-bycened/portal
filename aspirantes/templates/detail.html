@@ -1,0 +1,301 @@
+{% extends "layouts/main.html" %}
+
+{% block title %}
+    Detalle de convocatoria
+{% endblock %}
+
+{% block page_title %}
+    Detalle de convocatoria
+{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+<div class="container py-4">
+
+    <!-- ENCABEZADO -->
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h4 mb-1">
+                {{ convocatoria.nombre }}
+            </h1>
+
+            <p class="text-muted mb-0">
+                Del {{ convocatoria.fecha_inicio|date:"d/m/Y" }} al {{ convocatoria.fecha_fin|date:"d/m/Y" }}
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'convocatorias_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver
+            </a>
+
+            <a href="{% url 'admin_solicitudes_list' %}?convocatoria={{ convocatoria.pk }}" class="btn btn-outline-info">
+                <i class="bi bi-people me-1"></i>
+                Ver aspirantes
+            </a>
+
+            <a href="{% url 'convocatorias_entrevistas' convocatoria.pk %}" class="btn btn-outline-primary">
+                <i class="bi bi-calendar-event me-1"></i>
+                Configurar entrevistas
+            </a>
+
+            <a href="{% url 'convocatorias_update' convocatoria.pk %}" class="btn btn-primary">
+                <i class="bi bi-pencil-square me-1"></i>
+                Editar convocatoria
+            </a>
+            <a href="{% url 'admin_convocatoria_resultados' convocatoria.pk %}" class="btn btn-outline-success">
+                <i class="bi bi-check2-circle me-1"></i>
+                Resultados
+            </a>
+            {% comment %} <a href="{% url 'admin_aceptados_convocatoria' convocatoria.pk %}" class="btn btn-outline-success">
+                <i class="bi bi-check2-circle me-1"></i>
+                Aceptados
+            </a> {% endcomment %}
+        </div>
+    </div>
+
+    <!-- CARDS RESUMEN -->
+    <div class="row g-4 mb-4">
+
+        <!-- ESTADO -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Estado de convocatoria
+                    </p>
+
+                    {% if convocatoria.activo %}
+                        <span class="badge bg-success">
+                            Activa
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary">
+                            Inactiva
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTADOS -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Resultados
+                    </p>
+
+                    {% if convocatoria.resultados_publicados %}
+                        <span class="badge bg-primary">
+                            Publicados
+                        </span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">
+                            Pendientes
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRAMAS -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Programas ofertados
+                    </p>
+
+                    <p class="h5 mb-0">
+                        {{ programas.count }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ASPIRANTES -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Aspirantes registrados
+                    </p>
+
+                    <p class="h5 mb-0">
+                        {{ total_aspirantes }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PROGRAMAS Y ENTREVISTAS -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <h2 class="h5 mb-1">
+                        Programas ofertados
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Programas educativos disponibles, entrevistas y aspirantes registrados por programa.
+                    </p>
+                </div>
+
+                <a href="{% url 'convocatorias_entrevistas' convocatoria.pk %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    Editar entrevistas
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+
+            {% if programas %}
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>Programa educativo</th>
+                                <th>Aspirantes</th>
+                                <th>Fecha entrevista</th>
+                                <th>Hora</th>
+                                <th>Lugar</th>
+                                <th>Publicación</th>
+                                <th class="text-end">Acción</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for programa in programas %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">
+                                            {{ programa.programa_educativo.nombre }}
+                                        </div>
+
+                                        <small class="text-muted">
+                                            Clave: {{ programa.programa_educativo.clave }}
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        {% if programa.total_aspirantes > 0 %}
+                                            <span class="badge bg-primary">
+                                                {{ programa.total_aspirantes }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                0
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if programa.fecha_entrevista %}
+                                            {{ programa.fecha_entrevista|date:"d/m/Y" }}
+                                        {% else %}
+                                            <span class="text-muted">
+                                                No registrada
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if programa.hora_entrevista %}
+                                            {{ programa.hora_entrevista|time:"H:i" }} hrs
+                                        {% else %}
+                                            <span class="text-muted">
+                                                No registrada
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if programa.lugar_entrevista %}
+                                            {{ programa.lugar_entrevista }}
+                                        {% else %}
+                                            <span class="text-muted">
+                                                No registrado
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if programa.entrevista_publicada %}
+                                            <span class="badge bg-success">
+                                                Publicada
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">
+                                                No publicada
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="text-end">
+                                        <a 
+                                            href="{% url 'admin_solicitudes_list' %}?convocatoria={{ convocatoria.pk }}&programa={{ programa.pk }}" 
+                                            class="btn btn-sm btn-outline-primary"
+                                        >
+                                            Ver aspirantes
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="7" class="bg-light">
+                                        <div class="small">
+                                            <strong>Indicaciones:</strong>
+
+                                            {% if programa.indicaciones_entrevista %}
+                                                {{ programa.indicaciones_entrevista }}
+                                            {% else %}
+                                                <span class="text-muted">
+                                                    Sin indicaciones registradas.
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-5">
+                    <i class="bi bi-journal-x fs-1 text-muted"></i>
+
+                    <h3 class="h5 mt-3">
+                        Sin programas asignados
+                    </h3>
+
+                    <p class="text-muted">
+                        Esta convocatoria aún no tiene programas educativos activos.
+                    </p>
+
+                    <a href="{% url 'convocatorias_update' convocatoria.pk %}" class="btn btn-primary">
+                        Agregar programas
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

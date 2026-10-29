@@ -1,0 +1,265 @@
+{% extends "layouts/main.html" %}
+
+{% block title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block page_title %}
+    {{ titulo }}
+{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+        <div class="col-xl-11">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+                        <div>
+                            <h1 class="h4 mb-1">
+                                Configurar entrevistas
+                            </h1>
+
+                            <p class="text-muted mb-0">
+                                {{ convocatoria.nombre }}
+                            </p>
+                        </div>
+
+                        <a href="{% url 'convocatorias_detail' convocatoria.pk %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            Volver
+                        </a>
+
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <div class="alert alert-info">
+                        <div class="d-flex gap-2">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <div>
+                                Configura la fecha, hora, lugar e indicaciones de entrevista para cada programa ofertado en esta convocatoria.
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {{ formset.management_form }}
+
+                        {% if formset.non_form_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in formset.non_form_errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if formset.forms %}
+
+                            {% for form in formset %}
+
+                                <div class="card border mb-4">
+                                    <div class="card-body">
+
+                                        {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+
+                                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-4">
+
+                                            <div>
+                                                <h2 class="h5 fw-bold mb-1">
+                                                    {{ form.instance.programa_educativo.nombre }}
+                                                </h2>
+
+                                                <p class="text-muted small mb-0">
+                                                    Clave: {{ form.instance.programa_educativo.clave }}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                {% if form.instance.entrevista_publicada %}
+                                                    <span class="badge bg-success">
+                                                        Entrevista publicada
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-warning text-dark">
+                                                        Entrevista no publicada
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+
+                                        </div>
+
+                                        {% if form.non_field_errors %}
+                                            <div class="alert alert-danger">
+                                                {% for error in form.non_field_errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="row">
+
+                                            <div class="col-md-3 mb-3">
+                                                <label class="form-label" for="{{ form.fecha_entrevista.id_for_label }}">
+                                                    {{ form.fecha_entrevista.label }}
+                                                </label>
+
+                                                {{ form.fecha_entrevista }}
+
+                                                {% for error in form.fecha_entrevista.errors %}
+                                                    <div class="text-danger small mt-1">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label class="form-label" for="{{ form.hora_entrevista.id_for_label }}">
+                                                    {{ form.hora_entrevista.label }}
+                                                </label>
+
+                                                {{ form.hora_entrevista }}
+
+                                                {% for error in form.hora_entrevista.errors %}
+                                                    <div class="text-danger small mt-1">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label" for="{{ form.lugar_entrevista.id_for_label }}">
+                                                    {{ form.lugar_entrevista.label }}
+                                                </label>
+
+                                                {{ form.lugar_entrevista }}
+
+                                                {% for error in form.lugar_entrevista.errors %}
+                                                    <div class="text-danger small mt-1">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label" for="{{ form.indicaciones_entrevista.id_for_label }}">
+                                                {{ form.indicaciones_entrevista.label }}
+                                            </label>
+
+                                            {{ form.indicaciones_entrevista }}
+
+                                            {% for error in form.indicaciones_entrevista.errors %}
+                                                <div class="text-danger small mt-1">
+                                                    {{ error }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-check">
+                                                    {{ form.entrevista_publicada }}
+
+                                                    <label class="form-check-label" for="{{ form.entrevista_publicada.id_for_label }}">
+                                                        {{ form.entrevista_publicada.label }}
+                                                    </label>
+                                                </div>
+
+                                                {% for error in form.entrevista_publicada.errors %}
+                                                    <div class="text-danger small mt-1">
+                                                        {{ error }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                            {% if form.activo %}
+                                                <div class="col-md-6 mb-2">
+                                                    <div class="form-check">
+                                                        {{ form.activo }}
+
+                                                        <label class="form-check-label" for="{{ form.activo.id_for_label }}">
+                                                            {{ form.activo.label }}
+                                                        </label>
+                                                    </div>
+
+                                                    {% for error in form.activo.errors %}
+                                                        <div class="text-danger small mt-1">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="alert alert-warning mb-0">
+                                Esta convocatoria no tiene programas activos asignados. Primero edita la convocatoria y selecciona al menos un programa educativo.
+                            </div>
+
+                        {% endif %}
+
+                        <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top">
+
+                            <a href="{% url 'convocatorias_detail' convocatoria.pk %}" class="btn btn-outline-secondary">
+                                Cancelar
+                            </a>
+
+                            {% if formset.forms %}
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i>
+                                    Guardar entrevistas
+                                </button>
+                            {% endif %}
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% if messages %}
+    {% for message in messages %}
+        <script>
+            Swal.fire({
+                icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}",
+                title: "{% if message.tags == 'error' %}Error{% else %}Correcto{% endif %}",
+                text: "{{ message|escapejs }}",
+                confirmButtonText: "Aceptar",
+                confirmButtonColor: "#0C3F63"
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

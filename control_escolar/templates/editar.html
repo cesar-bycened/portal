@@ -1,0 +1,227 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+
+{% block title %}
+    Editar programa educativo
+{% endblock %}
+
+{% block page_title %}
+    Editar programa educativo
+{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h1 class="h4 mb-1">
+                    Editar programa educativo
+                </h1>
+                <p class="text-muted mb-0">
+                    Modifica la información del programa educativo seleccionado.
+                </p>
+            </div>
+
+            <div class="card-body p-4">
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.clave.id_for_label }}" class="form-label">
+                                {{ form.clave.label }}
+                            </label>
+
+                            {{ form.clave }}
+
+                            {% if form.clave.help_text %}
+                                <div class="form-text">
+                                    {{ form.clave.help_text }}
+                                </div>
+                            {% endif %}
+
+                            {% for error in form.clave.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-8 mb-3">
+                            <label for="{{ form.nombre.id_for_label }}" class="form-label">
+                                {{ form.nombre.label }}
+                            </label>
+
+                            {{ form.nombre }}
+
+                            {% for error in form.nombre.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.nivel.id_for_label }}" class="form-label">
+                                {{ form.nivel.label }}
+                            </label>
+
+                            {{ form.nivel }}
+
+                            {% for error in form.nivel.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.duracion_semestres.id_for_label }}" class="form-label">
+                                {{ form.duracion_semestres.label }}
+                            </label>
+
+                            {{ form.duracion_semestres }}
+
+                            {% for error in form.duracion_semestres.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.descripcion.id_for_label }}" class="form-label">
+                            {{ form.descripcion.label }}
+                        </label>
+
+                        {{ form.descripcion }}
+
+                        {% for error in form.descripcion.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-check mb-4">
+                        {{ form.activo }}
+
+                        <label for="{{ form.activo.id_for_label }}" class="form-check-label">
+                            {{ form.activo.label }}
+                        </label>
+
+                        {% if form.activo.help_text %}
+                            <div class="form-text">
+                                {{ form.activo.help_text }}
+                            </div>
+                        {% endif %}
+
+                        {% for error in form.activo.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <a href="{% url 'programas' %}" class="btn btn-outline-secondary">
+                            Cancelar
+                        </a>
+
+                        <button type="submit" class="btn btn-primary">
+                            Actualizar programa
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer class="text-white py-4 mt-5" style="background-color: #0C3F63;"> 
+    <div class="container">
+        <div class="row g-4 text-center text-md-start">
+            <div class="col-md-4">
+                <h2 class="h6 fw-bold mb-3 text-uppercase">Dirección</h2>
+                <address class="mb-0 small" style="opacity: 0.8;">
+                    Calzada Escuela Normal S/N<br>
+                    Boulevard Lic. Armando del Castillo<br>
+                    Zona Centro, Durango, Dgo. C.P. 34000
+                </address>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="h6 fw-bold mb-3 text-uppercase">Contacto</h2>
+                <ul class="list-unstyled small mb-0" style="opacity: 0.8;">
+                    <li class="mb-1">
+                        <a href="tel:+526188119478" class="text-white text-decoration-none">
+                            +52 (618) 811 9478
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:direccion.bycened@gmail.com" class="text-white text-decoration-none">
+                            direccion.bycened@gmail.com
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="h6 fw-bold mb-3 text-uppercase">Enlaces</h2>
+                <div class="d-flex flex-column gap-2 small" style="opacity: 0.8;">
+                    <a href="#" class="text-white text-decoration-none">
+                        Aviso de Privacidad
+                    </a>
+
+                    <div>
+                        <a href="#" class="text-white text-decoration-none me-3">
+                            <i class="bi bi-facebook"></i> Facebook
+                        </a>
+
+                        <a href="#" class="text-white text-decoration-none">
+                            <i class="bi bi-instagram"></i> Instagram
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% if messages %}
+    {% for message in messages %}
+        <script>
+            Swal.fire({
+                icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}",
+                title: "{% if message.tags == 'error' %}Error{% else %}Actualizado{% endif %}",
+                text: "{{ message|escapejs }}",
+                confirmButtonText: "Aceptar",
+                confirmButtonColor: "#0C3F63"
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

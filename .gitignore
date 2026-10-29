@@ -1,0 +1,16 @@
+# variables de entorno
+.env
+
+# entornos virtuales
+/venv/
+requirements.txt
+
+# python
+__pycache__/
+/__pycache__/
+
+# django
+*.sqlite3
+staticfiles/
+*.pyc
+/media/

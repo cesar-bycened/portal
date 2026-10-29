@@ -1,0 +1,270 @@
+{% extends "layouts/main.html" %}
+
+{% block title %}
+    Revisar expediente
+{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h4 mb-1">
+                Revisión de expediente
+            </h1>
+
+            <p class="text-muted mb-0">
+                Folio {{ solicitud.folio }}
+            </p>
+        </div>
+
+        <a href="{% url 'admin_solicitudes_list' %}" class="btn btn-outline-secondary">
+            Volver a solicitudes
+        </a>
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Aspirante
+                    </p>
+
+                    <p class="fw-semibold mb-0">
+                        {% if perfil_aspirante %}
+                            {{ perfil_aspirante.nombre_completo }}
+                        {% else %}
+                            Sin perfil registrado
+                        {% endif %}
+                    </p>
+
+                    <small class="text-muted">
+                        {{ solicitud.usuario.email }}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Programa educativo
+                    </p>
+
+                    <p class="fw-semibold mb-0">
+                        {{ solicitud.programa_educativo.nombre }}
+                    </p>
+
+                    <small class="text-muted">
+                        {{ solicitud.programa_educativo.clave }}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Convocatoria
+                    </p>
+
+                    <p class="fw-semibold mb-0">
+                        {{ solicitud.convocatoria.nombre }}
+                    </p>
+
+                    <small class="text-muted">
+                        {{ solicitud.fecha_postulacion|date:"d/m/Y H:i" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="small text-muted">
+                            Documentos cargados
+                        </span>
+
+                        <span class="small fw-semibold">
+                            {{ documentos_cargados }} de {{ total_documentos }}
+                        </span>
+                    </div>
+
+                    <div class="progress" style="height: 10px;">
+                        <div 
+                            class="progress-bar"
+                            role="progressbar"
+                            style="width: {{ porcentaje_cargado }}%;"
+                            aria-valuenow="{{ porcentaje_cargado }}"
+                            aria-valuemin="0"
+                            aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="small text-muted">
+                            Documentos aprobados
+                        </span>
+
+                        <span class="small fw-semibold">
+                            {{ documentos_aprobados }} de {{ total_documentos }}
+                        </span>
+                    </div>
+
+                    <div class="progress" style="height: 10px;">
+                        <div 
+                            class="progress-bar bg-success"
+                            role="progressbar"
+                            style="width: {{ porcentaje_aprobado }}%;"
+                            aria-valuenow="{{ porcentaje_aprobado }}"
+                            aria-valuemin="0"
+                            aria-valuemax="100">
+                        </div>
+                    </div>
+
+                    {% if solicitud.expediente_completo %}
+                        <div class="alert alert-success mt-3 mb-0">
+                            <i class="bi bi-check-circle-fill me-1"></i>
+                            Expediente completo.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <h2 class="h5 mb-1">
+                Documentos del expediente
+            </h2>
+
+            <p class="text-muted mb-0">
+                Revisa cada archivo PDF y define si es aprobado o requiere corrección.
+            </p>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Documento</th>
+                            <th>Archivo</th>
+                            <th>Estado actual</th>
+                            <th style="min-width: 330px;">Revisión</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in tipos_documentos %}
+                            <tr>
+                                <td class="fw-semibold">
+                                    {{ item.etiqueta }}
+                                </td>
+
+                                <td>
+                                    {% if item.documento and item.documento.archivo %}
+                                        <a href="{{ item.documento.archivo.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-file-earmark-pdf me-1"></i>
+                                            Ver PDF
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">
+                                            No cargado
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if item.documento %}
+                                        {% if item.documento.estado == "APROBADO" %}
+                                            <span class="badge bg-success">
+                                                Aprobado
+                                            </span>
+                                        {% elif item.documento.estado == "CORRECCION" %}
+                                            <span class="badge bg-danger">
+                                                Corrección requerida
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">
+                                                Pendiente
+                                            </span>
+                                        {% endif %}
+
+                                        {% if item.documento.fecha_revision %}
+                                            <br>
+                                            <small class="text-muted">
+                                                Revisado: {{ item.documento.fecha_revision|date:"d/m/Y H:i" }}
+                                            </small>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            Sin archivo
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if item.documento %}
+                                        <form method="post" action="{% url 'admin_documento_revision' item.documento.pk %}">
+                                            {% csrf_token %}
+
+                                            <div class="mb-2">
+                                                {{ item.revision_form.estado }}
+                                            </div>
+
+                                            <div class="mb-2">
+                                                {{ item.revision_form.observaciones }}
+                                            </div>
+
+                                            <button type="submit" class="btn btn-sm btn-primary">
+                                                Guardar revisión
+                                            </button>
+                                        </form>
+
+                                        {% if item.documento.observaciones %}
+                                            <div class="text-muted small mt-2">
+                                                <strong>Última observación:</strong>
+                                                {{ item.documento.observaciones }}
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted small">
+                                            El aspirante aún no ha cargado este documento.
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

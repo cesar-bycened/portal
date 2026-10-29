@@ -1,0 +1,165 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+
+{% block title %}Programas educativos{% endblock %}
+
+{% block page_title %}Programas educativos{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+<br>
+<br>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h4 mb-0">Programas educativos</h1>
+            <p class="text-muted mb-0">
+                Administración de programas ofertados por la institución.
+            </p>
+        </div>
+    
+        <a href="{% url 'createPrograma' %}" class="btn btn-primary">
+            Nuevo programa
+        </a>
+    </div>
+    
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+    
+            <form method="get" class="mb-3">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        class="form-control"
+                        placeholder="Buscar por clave o nombre"
+                        value="{{ request.GET.q }}"
+                    >
+                    <button class="btn btn-outline-secondary" type="submit">
+                        Buscar
+                    </button>
+                </div>
+            </form>
+    
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Clave</th>
+                            <th>Nombre</th>
+                            <th>Nivel</th>
+                            <th>Duración</th>
+                            <th>Activo</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                        {% for programa in programas %}
+                            <tr>
+                                <td>
+                                    <strong>{{ programa.clave }}</strong>
+                                </td>
+    
+                                <td>{{ programa.nombre }}</td>
+    
+                                <td>{{ programa.get_nivel_display }}</td>
+    
+                                <td>
+                                    {% if programa.duracion_semestres %}
+                                        {{ programa.duracion_semestres }} semestres
+                                    {% else %}
+                                        <span class="text-muted">No especificado</span>
+                                    {% endif %}
+                                </td>
+    
+                                <td>
+                                    {% if programa.activo %}
+                                        <span class="badge bg-success">Activo</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inactivo</span>
+                                    {% endif %}
+                                </td>
+    
+                                <td class="text-end">
+                                    <a href="{% url 'programas_detail' programa.pk %}" class="btn btn-sm btn-outline-secondary">
+                                        Ver
+                                    </a>
+    
+                                    <a href="{% url 'programas_update' programa.pk %}" class="btn btn-sm btn-outline-primary">
+                                        Editar
+                                    </a>
+    
+                                    <form 
+                                        method="post" 
+                                        action="{% url 'programas_delete' programa.pk %}" 
+                                        class="d-inline form-eliminar-programa"
+                                    >
+                                        {% csrf_token %}
+
+                                        <button 
+                                            type="submit" 
+                                            class="btn btn-sm btn-outline-danger"
+                                            data-nombre="{{ programa.nombre }}"
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    No hay programas educativos registrados.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    
+        </div>
+    </div>
+
+</div>
+<br>
+
+{% include "layouts/footer.html" %}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const formsEliminar = document.querySelectorAll(".form-eliminar-programa");
+
+        formsEliminar.forEach(function (form) {
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const boton = form.querySelector("button[type='submit']");
+                const nombrePrograma = boton.getAttribute("data-nombre");
+
+                Swal.fire({
+                    title: "¿Eliminar programa educativo?",
+                    text: `Se eliminará: ${nombrePrograma}`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#dc3545",
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
+{% endblock %}

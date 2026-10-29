@@ -1,0 +1,148 @@
+{% extends "layouts/main.html" %}
+
+{% block title %}
+    {{ convocatoria.nombre }}
+{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h4 mb-1">
+                {{ convocatoria.nombre }}
+            </h1>
+
+            <p class="text-muted mb-0">
+                Del {{ convocatoria.fecha_inicio|date:"d/m/Y" }} al {{ convocatoria.fecha_fin|date:"d/m/Y" }}
+            </p>
+        </div>
+
+        <a href="{% url 'aspirante_convocatorias_list' %}" class="btn btn-outline-secondary">
+            Volver
+        </a>
+    </div>
+
+    {% if solicitud_existente %}
+        <div class="alert alert-info">
+            Ya tienes una solicitud registrada para esta convocatoria.
+
+            <a href="{% url 'solicitud_aspirante_detail' solicitud_existente.pk %}" class="alert-link">
+                Ver mi solicitud
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <h2 class="h5 mb-1">
+                Programas educativos ofertados
+            </h2>
+
+            <p class="text-muted mb-0">
+                Selecciona el programa educativo al que deseas postularte.
+            </p>
+        </div>
+
+        <div class="card-body p-0">
+
+            {% if programas %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Programa educativo</th>
+                                <th>Nivel</th>
+                                <th>Entrevista</th>
+                                <th class="text-end">Acción</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for programa in programas %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">
+                                            {{ programa.programa_educativo.nombre }}
+                                        </div>
+
+                                        <small class="text-muted">
+                                            {{ programa.programa_educativo.clave }}
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        {{ programa.programa_educativo.get_nivel_display }}
+                                    </td>
+
+                                    <td>
+                                        {% if programa.entrevista_publicada %}
+                                            {% if programa.fecha_entrevista %}
+                                                {{ programa.fecha_entrevista|date:"d/m/Y" }}
+
+                                                {% if programa.hora_entrevista %}
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        {{ programa.hora_entrevista|time:"H:i" }} hrs
+                                                    </small>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="text-muted">
+                                                    Por definir
+                                                </span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-muted">
+                                                No publicada
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="text-end">
+                                        {% if solicitud_existente %}
+                                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                Ya postulado
+                                            </button>
+                                        {% else %}
+                                            <form method="post" action="{% url 'aspirante_postular_programa' programa.pk %}">
+                                                {% csrf_token %}
+
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    Postularme
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                {% if programa.entrevista_publicada and programa.indicaciones_entrevista %}
+                                    <tr>
+                                        <td colspan="4" class="bg-light">
+                                            <small>
+                                                <strong>Indicaciones:</strong>
+                                                {{ programa.indicaciones_entrevista }}
+                                            </small>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <p class="text-muted mb-0">
+                        Esta convocatoria no tiene programas disponibles.
+                    </p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

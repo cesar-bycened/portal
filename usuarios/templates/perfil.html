@@ -1,0 +1,207 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+{% block title %}Mi perfil{% endblock %}
+{% block page_title %}Mi perfil{% endblock %}
+{% block content %}
+{% include "layouts/header.html" %}
+<style>
+.profile-page {
+    --profile-brand: #0c3f63;
+    --profile-ink: #172b3d;
+    --profile-muted: #526477;
+    background: #f3f6fa;
+    color: var(--profile-ink);
+    padding-block: clamp(1.25rem, 3vw, 2.5rem);
+}
+.profile-page *, .profile-page *::before, .profile-page *::after { box-sizing: border-box; }
+.profile-page a:focus-visible { outline: 3px solid #1674b5; outline-offset: 4px; }
+.profile-page .profile-topline { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1.25rem; }
+.profile-page .profile-back { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; color: var(--profile-brand); font-size: .875rem; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.profile-page .page-label { color: var(--profile-muted); font-size: .8125rem; }
+.profile-page .profile-hero { border: 1px solid #dce5ed; border-radius: 24px; background: #fff; box-shadow: 0 12px 35px rgba(21, 48, 73, .06); overflow: hidden; margin-bottom: 1.5rem; }
+.profile-page .hero-banner { padding: 1.5rem clamp(1.25rem, 3vw, 2rem) 3.25rem; color: #fff; background: linear-gradient(115deg, #0c3f63, #215d82); }
+.profile-page .hero-eyebrow { margin-bottom: .5rem; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: #d6e7f4; }
+.profile-page h1 { font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 700; letter-spacing: -.025em; margin: 0; }
+.profile-page .identity { display: flex; flex-wrap: wrap; gap: 1rem 1.25rem; align-items: center; padding: 0 clamp(1.25rem, 3vw, 2rem) 1.5rem; }
+.profile-page .avatar { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 104px; height: 104px; margin-top: -1.75rem; border: 5px solid #fff; border-radius: 22px; background: #e8f0f7; color: var(--profile-brand); object-fit: cover; box-shadow: 0 4px 14px rgba(21, 48, 73, .1); }
+.profile-page .avatar i { font-size: 2.8rem; }
+.profile-page .identity-text { flex: 1 1 240px; min-width: 0; padding-top: 1.25rem; }
+.profile-page .identity-name { font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 700; overflow-wrap: anywhere; margin: 0 0 .35rem; }
+.profile-page .identity-email { color: var(--profile-muted); font-size: .875rem; overflow-wrap: anywhere; margin: 0; }
+.profile-page .profile-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .85rem; }
+.profile-page .profile-tag { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .65rem; border-radius: 50rem; font-size: .75rem; font-weight: 600; background: #edf3f8; color: var(--profile-brand); }
+.profile-page .tag-complete { background: #e7f5ed; color: #17603e; }
+.profile-page .tag-incomplete { background: #fff3d6; color: #805000; }
+.profile-page .profile-edit { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 46px; padding: .7rem 1.1rem; border: 1px solid var(--profile-brand); border-radius: 11px; color: #fff; background: var(--profile-brand); font-size: .875rem; font-weight: 600; text-decoration: none; }
+.profile-page .profile-edit:hover { color: #fff; background: #082d47; }
+.profile-page .identity-actions { padding-top: 1.25rem; }
+.profile-page .profile-status { display: flex; align-items: flex-start; gap: .7rem; padding: 1rem clamp(1.25rem, 3vw, 2rem); border-top: 1px solid #e3eaf1; background: #f8fafc; color: var(--profile-muted); font-size: .875rem; line-height: 1.6; }
+.profile-page .profile-status i { flex-shrink: 0; color: var(--profile-brand); }
+.profile-page .profile-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.profile-page .profile-sidebar { min-width: 0; }
+.profile-page .section-nav { border: 1px solid #e0e7ef; border-radius: 18px; padding: 1.15rem; background: #fff; }
+.profile-page .nav-title { margin: 0 0 .75rem; padding-inline: .5rem; color: var(--profile-muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; }
+.profile-page .section-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .3rem; }
+.profile-page .section-nav a { display: flex; align-items: center; gap: .65rem; min-height: 44px; padding: .6rem .65rem; border-radius: 9px; color: var(--profile-muted); font-size: .8125rem; text-decoration: none; }
+.profile-page .section-nav a:hover { background: #edf4f9; color: var(--profile-brand); }
+.profile-page .section-nav i { color: var(--profile-brand); font-size: 1rem; }
+.profile-page .sidebar-note { padding: 1rem .5rem; color: var(--profile-muted); font-size: .8125rem; line-height: 1.65; margin: 0; }
+.profile-page .profile-sections { min-width: 0; }
+.profile-page .detail-card { scroll-margin-top: 6rem; border: 1px solid #e0e7ef; border-radius: 18px; background: #fff; margin-bottom: 1.25rem; overflow: hidden; box-shadow: 0 4px 16px rgba(21, 48, 73, .025); }
+.profile-page .detail-card:target { border-color: #7398b5; }
+.profile-page .section-heading { display: flex; align-items: center; gap: .85rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid #e6edf3; }
+.profile-page .section-icon { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; background: #edf4f9; color: var(--profile-brand); font-size: 1.15rem; }
+.profile-page .section-heading h2 { font-size: 1rem; font-weight: 700; margin: 0 0 .2rem; }
+.profile-page .section-heading p { font-size: .8125rem; line-height: 1.5; color: var(--profile-muted); margin: 0; }
+.profile-page .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.75rem; padding: .35rem 1.5rem .75rem; margin: 0; }
+.profile-page .detail-item { min-width: 0; padding: 1rem 0; border-bottom: 1px solid #edf1f5; }
+.profile-page .detail-item.wide { grid-column: 1 / -1; }
+.profile-page dt { font-size: .8125rem; font-weight: 400; color: var(--profile-muted); margin-bottom: .35rem; }
+.profile-page dd { font-size: .9375rem; line-height: 1.6; font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+.profile-page .profile-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding-top: .25rem; }
+@media (max-width: 991.98px) {
+    .profile-page .profile-layout { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+    .profile-page .section-nav ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .profile-page .sidebar-note { display: none; }
+}
+@media (max-width: 575.98px) {
+    .profile-page .identity { gap: .75rem; }
+    .profile-page .identity-text { flex-basis: 100%; padding-top: 0; }
+    .profile-page .identity-actions { width: 100%; padding-top: .5rem; }
+    .profile-page .identity-actions .profile-edit { width: 100%; }
+    .profile-page .hero-banner { padding-bottom: 3rem; }
+    .profile-page .profile-hero { border-radius: 18px; }
+    .profile-page .section-nav { padding: .85rem; }
+    .profile-page .section-nav ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .profile-page .section-nav a { font-size: .75rem; padding: .5rem; }
+    .profile-page .section-heading { padding: 1rem; }
+    .profile-page .detail-grid { grid-template-columns: minmax(0, 1fr); padding-inline: 1rem; }
+}
+@media print {
+    .profile-page { background: #fff; padding: 0; }
+    .profile-page .profile-sidebar, .profile-page .profile-topline, .profile-page .identity-actions, .profile-page .profile-bottom { display: none; }
+    .profile-page .profile-layout { display: block; }
+    .profile-page .detail-item { break-inside: avoid; }
+}
+</style>
+<main class="profile-page">
+<div class="container">
+    <div class="profile-topline">
+        <a href="{% url 'aspirante_dashboard' %}" class="profile-back"><i class="bi bi-arrow-left" aria-hidden="true"></i>Volver al inicio</a>
+        <span class="page-label">Portal de Aspirantes · Mi perfil</span>
+    </div>
+    <section class="profile-hero" aria-labelledby="profile-title">
+        <div class="hero-banner"><p class="hero-eyebrow">Tu información</p><h1 id="profile-title">Mi perfil</h1></div>
+        <div class="identity">
+            {% if perfil.fotografia %}
+                <img src="{{ perfil.fotografia.url }}" alt="Fotografía de perfil" width="104" height="104" class="avatar">
+            {% else %}
+                <div class="avatar" role="img" aria-label="Sin fotografía de perfil"><i class="bi bi-person" aria-hidden="true"></i></div>
+            {% endif %}
+            <div class="identity-text">
+                <h2 class="identity-name">{{ perfil.nombre_completo|default:"Nombre no registrado" }}</h2>
+                <p class="identity-email">{{ request.user.email|default:"Correo no registrado" }}</p>
+                <div class="profile-tags">
+                    <span class="profile-tag"><i class="bi bi-person-badge" aria-hidden="true"></i>{{ request.user.get_rol_display }}</span>
+                    {% if perfil_completo %}
+                        <span class="profile-tag tag-complete"><i class="bi bi-check-circle" aria-hidden="true"></i>Perfil completo</span>
+                    {% else %}
+                        <span class="profile-tag tag-incomplete"><i class="bi bi-exclamation-circle" aria-hidden="true"></i>Perfil incompleto</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="identity-actions"><a href="{% url 'perfil_aspirante' %}" class="profile-edit"><i class="bi bi-pencil-square" aria-hidden="true"></i>Editar perfil</a></div>
+        </div>
+        <div class="profile-status"><i class="bi bi-info-circle" aria-hidden="true"></i><p class="mb-0">
+            {% if perfil_completo %}
+                Tu perfil está completo. Revisa que tus datos estén actualizados.
+            {% else %}
+                <strong>Tu perfil tiene información pendiente.</strong> Selecciona “Editar perfil” para completar los datos requeridos.
+            {% endif %}
+        </p></div>
+    </section>
+    <div class="profile-layout">
+        <aside class="profile-sidebar">
+            <nav class="section-nav" aria-label="Secciones del perfil"><h2 class="nav-title">En tu perfil</h2><ul><li><a href="#perfil-personal"><i class="bi bi-person-vcard" aria-hidden="true"></i><span>Personales</span></a></li>
+<li><a href="#perfil-contacto"><i class="bi bi-geo-alt" aria-hidden="true"></i><span>Contacto</span></a></li>
+<li><a href="#perfil-familia"><i class="bi bi-people" aria-hidden="true"></i><span>Familia</span></a></li>
+<li><a href="#perfil-academica"><i class="bi bi-mortarboard" aria-hidden="true"></i><span>Académica</span></a></li>
+<li><a href="#perfil-laboral"><i class="bi bi-briefcase" aria-hidden="true"></i><span>Laboral</span></a></li>
+<li><a href="#perfil-adicional"><i class="bi bi-person-lines-fill" aria-hidden="true"></i><span>Adicional</span></a></li></ul></nav>
+            <p class="sidebar-note">Consulta tus datos por sección. Para corregirlos o actualizarlos, utiliza el botón <strong>Editar perfil</strong>.</p>
+        </aside>
+        <div class="profile-sections">
+            <section class="detail-card" id="perfil-personal" aria-labelledby="titulo-personal">
+<div class="section-heading"><span class="section-icon"><i class="bi bi-person-vcard" aria-hidden="true"></i></span><div><h2 id="titulo-personal">Datos personales</h2><p>Identidad e información de nacimiento.</p></div></div>
+<dl class="detail-grid">
+<div class="detail-item"><dt>Nombre(s)</dt><dd>{{ perfil.nombres|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Apellido paterno</dt><dd>{{ perfil.apellido_paterno|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Apellido materno</dt><dd>{{ perfil.apellido_materno|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Fecha de nacimiento</dt><dd>{% if perfil.fecha_nacimiento %} {{ perfil.fecha_nacimiento|date:"d/m/Y" }} {% else %} No registrada {% endif %}</dd></div>
+<div class="detail-item"><dt>Nacionalidad</dt><dd>{{ perfil.nacionalidad|default:"No registrada" }}</dd></div>
+<div class="detail-item"><dt>Sexo</dt><dd>{% if perfil.sexo %} {{ perfil.get_sexo_display }} {% else %} No registrado {% endif %}</dd></div>
+<div class="detail-item"><dt>Estado civil</dt><dd>{% if perfil.estado_civil %} {{ perfil.get_estado_civil_display }} {% else %} No registrado {% endif %}</dd></div>
+<div class="detail-item"><dt>CURP</dt><dd>{{ perfil.curp|default:"No registrada" }}</dd></div>
+<div class="detail-item"><dt>RFC</dt><dd>{{ perfil.rfc|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Estado de nacimiento</dt><dd>{{ perfil.estado_nacimiento|default:"No registrado" }}</dd></div>
+</dl>
+</section>
+<section class="detail-card" id="perfil-contacto" aria-labelledby="titulo-contacto">
+<div class="section-heading"><span class="section-icon"><i class="bi bi-geo-alt" aria-hidden="true"></i></span><div><h2 id="titulo-contacto">Contacto y domicilio</h2><p>Medios de contacto y domicilio registrado.</p></div></div>
+<dl class="detail-grid">
+<div class="detail-item"><dt>Teléfono principal</dt><dd>{{ perfil.telefono_principal|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Teléfono alterno</dt><dd>{{ perfil.telefono_alterno|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>País de residencia</dt><dd>{{ perfil.pais_residencia|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Código postal</dt><dd>{{ perfil.codigo_postal|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Localidad / Colonia</dt><dd>{{ perfil.localidad_colonia|default:"No registrada" }}</dd></div>
+<div class="detail-item"><dt>Calle</dt><dd>{{ perfil.domicilio_calle|default:"No registrada" }}</dd></div>
+<div class="detail-item"><dt>No.</dt><dd>{{ perfil.numero_domicilio|default:"-" }}</dd></div>
+</dl>
+</section>
+<section class="detail-card" id="perfil-familia" aria-labelledby="titulo-familia">
+<div class="section-heading"><span class="section-icon"><i class="bi bi-people" aria-hidden="true"></i></span><div><h2 id="titulo-familia">Información familiar</h2><p>Hijos y dependientes económicos.</p></div></div>
+<dl class="detail-grid">
+<div class="detail-item"><dt>¿Tiene hijos?</dt><dd>{% if perfil.tiene_hijos == None %}No registrado{% elif perfil.tiene_hijos %}Sí{% else %}No{% endif %}</dd></div>
+<div class="detail-item"><dt>¿Tiene dependientes económicos?</dt><dd>{% if perfil.dependientes_economicos == None %}No registrado{% elif perfil.dependientes_economicos %}Sí{% else %}No{% endif %}</dd></div>
+</dl>
+</section>
+<section class="detail-card" id="perfil-academica" aria-labelledby="titulo-academica">
+<div class="section-heading"><span class="section-icon"><i class="bi bi-mortarboard" aria-hidden="true"></i></span><div><h2 id="titulo-academica">Información académica</h2><p>Escolaridad e institución de procedencia.</p></div></div>
+<dl class="detail-grid">
+<div class="detail-item"><dt>Nivel de escolaridad</dt><dd>{% if perfil.nivel_escolaridad %} {{ perfil.get_nivel_escolaridad_display }} {% else %} No registrado {% endif %}</dd></div>
+<div class="detail-item wide"><dt>Institución de procedencia</dt><dd>{{ perfil.institucion_procedencia|default:"No registrada" }}</dd></div>
+<div class="detail-item"><dt>Estado de la institución</dt><dd>{{ perfil.estado_institucion|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Municipio de la institución</dt><dd>{{ perfil.municipio_institucion|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>¿Cuenta con título?</dt><dd>{% if perfil.cuenta_con_titulo == None %}No registrado{% elif perfil.cuenta_con_titulo %}Sí{% else %}No{% endif %}</dd></div>
+<div class="detail-item"><dt>¿Cuenta con cédula?</dt><dd>{% if perfil.cuenta_con_cedula == None %}No registrado{% elif perfil.cuenta_con_cedula %}Sí{% else %}No{% endif %}</dd></div>
+</dl>
+</section>
+<section class="detail-card" id="perfil-laboral" aria-labelledby="titulo-laboral">
+<div class="section-heading"><span class="section-icon"><i class="bi bi-briefcase" aria-hidden="true"></i></span><div><h2 id="titulo-laboral">Información laboral</h2><p>Situación laboral y actividades.</p></div></div>
+<dl class="detail-grid">
+<div class="detail-item"><dt>¿Trabaja actualmente?</dt><dd>{% if perfil.trabaja_actualmente == None %}No registrado{% elif perfil.trabaja_actualmente %}Sí{% else %}No{% endif %}</dd></div>
+<div class="detail-item"><dt>Lugar de trabajo</dt><dd>{{ perfil.lugar_trabajo|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Puesto o cargo</dt><dd>{{ perfil.puesto_cargo|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>Antigüedad laboral</dt><dd>{{ perfil.antiguedad_laboral|default:"No registrada" }}</dd></div>
+<div class="detail-item wide"><dt>Descripción de actividades</dt><dd>{% if perfil.descripcion_actividades %} {{ perfil.descripcion_actividades|linebreaksbr }} {% else %} No registrada {% endif %}</dd></div>
+</dl>
+</section>
+<section class="detail-card" id="perfil-adicional" aria-labelledby="titulo-adicional">
+<div class="section-heading"><span class="section-icon"><i class="bi bi-person-lines-fill" aria-hidden="true"></i></span><div><h2 id="titulo-adicional">Información adicional</h2><p>Información complementaria de tu perfil.</p></div></div>
+<dl class="detail-grid">
+<div class="detail-item"><dt>¿Pertenece a un pueblo originario?</dt><dd>{% if perfil.pueblo_originario == None %}No registrado{% elif perfil.pueblo_originario %}Sí{% else %}No{% endif %}</dd></div>
+<div class="detail-item"><dt>Pueblo originario</dt><dd>{{ perfil.cual_pueblo|default:"No registrado" }}</dd></div>
+<div class="detail-item"><dt>¿Tiene discapacidad?</dt><dd>{% if perfil.tiene_discapacidad == None %}No registrado{% elif perfil.tiene_discapacidad %}Sí{% else %}No{% endif %}</dd></div>
+<div class="detail-item"><dt>¿Cuenta con diagnóstico?</dt><dd>{% if perfil.tiene_diagnostico == None %}No registrado{% elif perfil.tiene_diagnostico %}Sí{% else %}No{% endif %}</dd></div>
+</dl>
+</section>
+            <div class="profile-bottom">
+                <a href="{% url 'aspirante_dashboard' %}" class="profile-back"><i class="bi bi-arrow-left" aria-hidden="true"></i>Volver al inicio</a>
+                <a href="{% url 'perfil_aspirante' %}" class="profile-edit"><i class="bi bi-pencil-square" aria-hidden="true"></i>Editar perfil</a>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+{% include "layouts/footer.html" %}
+{% endblock %}

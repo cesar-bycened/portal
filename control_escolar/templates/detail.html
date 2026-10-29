@@ -1,0 +1,73 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+
+{% block title %}Detalle del programa{% endblock %}
+
+{% block page_title %}Detalle del programa{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h1 class="h4 mb-1">{{ programa.nombre }}</h1>
+                        <p class="text-muted mb-0">{{ programa.clave }}</p>
+                    </div>
+
+                    {% if programa.activo %}
+                        <span class="badge bg-success">Activo</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </div>
+
+                <hr>
+
+                <dl class="row">
+                    <dt class="col-sm-4">Nivel</dt>
+                    <dd class="col-sm-8">{{ programa.get_nivel_display }}</dd>
+
+                    <dt class="col-sm-4">Duración</dt>
+                    <dd class="col-sm-8">
+                        {% if programa.duracion_semestres %}
+                            {{ programa.duracion_semestres }} semestres
+                        {% else %}
+                            No especificado
+                        {% endif %}
+                    </dd>
+
+                    <dt class="col-sm-4">Descripción</dt>
+                    <dd class="col-sm-8">
+                        {% if programa.descripcion %}
+                            {{ programa.descripcion }}
+                        {% else %}
+                            <span class="text-muted">Sin descripción</span>
+                        {% endif %}
+                    </dd>
+                </dl>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'programas_list' %}" class="btn btn-outline-secondary">
+                        Volver
+                    </a>
+
+                    <a href="{% url 'programas_update' programa.pk %}" class="btn btn-primary">
+                        Editar
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,360 @@
+{% extends "layouts/main.html" %}
+
+{% block title %}
+    Expediente digital
+{% endblock %}
+
+{% block page_title %}
+    Expediente digital
+{% endblock %}
+
+{% block content %}
+
+<div class="min-vh-100 d-flex flex-column">
+
+    {% include "layouts/header.html" %}
+
+    <main class="flex-grow-1">
+        <div class="container py-4">
+
+            <!-- ENCABEZADO -->
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+                <div>
+                    <h1 class="h4 fw-bold mb-1">
+                        Expediente digital
+                    </h1>
+
+                    <p class="text-muted mb-0">
+                        Carga y da seguimiento a los documentos requeridos para tu proceso de admisión.
+                    </p>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'solicitud_aspirante_detail' solicitud.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-file-earmark-text me-1"></i>
+                        Ver solicitud
+                    </a>
+
+                    <a href="{% url 'aspirante_dashboard' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Volver
+                    </a>
+                </div>
+            </div>
+
+            <!-- RESUMEN DE SOLICITUD -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <p class="text-muted small mb-1">
+                                Folio
+                            </p>
+
+                            <p class="h4 fw-bold mb-0">
+                                {{ solicitud.folio }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <p class="text-muted small mb-1">
+                                Programa educativo
+                            </p>
+
+                            <p class="fw-semibold mb-0">
+                                {{ solicitud.programa_educativo.nombre }}
+                            </p>
+
+                            <small class="text-muted">
+                                {{ solicitud.programa_educativo.clave }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <p class="text-muted small mb-1">
+                                Convocatoria
+                            </p>
+
+                            <p class="fw-semibold mb-0">
+                                {{ solicitud.convocatoria.nombre }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <p class="text-muted small mb-1">
+                                Estado
+                            </p>
+
+                            <span class="badge bg-primary">
+                                {{ solicitud.get_estado_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PROGRESO -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="small text-muted">
+                                    Documentos cargados
+                                </span>
+
+                                <span class="small fw-semibold">
+                                    {{ documentos_cargados }} de {{ total_documentos }}
+                                </span>
+                            </div>
+
+                            <div class="progress" style="height: 10px;">
+                                <div 
+                                    class="progress-bar"
+                                    role="progressbar"
+                                    style="width: {{ porcentaje_expediente }}%;"
+                                    aria-valuenow="{{ porcentaje_expediente }}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100">
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mt-2 mb-0">
+                                {{ porcentaje_expediente }}% del expediente cargado.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="small text-muted">
+                                    Documentos aprobados
+                                </span>
+
+                                <span class="small fw-semibold">
+                                    {{ documentos_aprobados }} de {{ total_documentos }}
+                                </span>
+                            </div>
+
+                            <div class="progress" style="height: 10px;">
+                                <div 
+                                    class="progress-bar bg-success"
+                                    role="progressbar"
+                                    style="width: {{ porcentaje_aprobado }}%;"
+                                    aria-valuenow="{{ porcentaje_aprobado }}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100">
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mt-2 mb-0">
+                                {{ porcentaje_aprobado }}% del expediente aprobado.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- INSTRUCCIONES -->
+            <div class="alert alert-info border-0 shadow-sm mb-4">
+                <div class="d-flex gap-2">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <div>
+                        <strong>Indicaciones:</strong>
+                        Sube cada documento en formato PDF. El archivo no debe superar los 5 MB. 
+                        Si un documento requiere corrección, podrás reemplazarlo desde esta pantalla.
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOCUMENTOS -->
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h2 class="h5 fw-bold mb-1">
+                        Documentos requeridos
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Carga o reemplaza los documentos necesarios para completar tu expediente.
+                    </p>
+                </div>
+
+                <div class="card-body p-0">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Documento</th>
+                                    <th>Estado</th>
+                                    <th>Archivo actual</th>
+                                    <th style="min-width: 320px;">Carga de archivo</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for item in tipos_documentos %}
+                                    <tr id="documento_{{ item.valor }}">
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center"
+                                                     style="width: 38px; height: 38px;">
+                                                    <i class="bi bi-file-earmark-pdf text-danger"></i>
+                                                </div>
+
+                                                <div>
+                                                    <div class="fw-semibold">
+                                                        {{ item.etiqueta }}
+                                                    </div>
+
+                                                    <small class="text-muted">
+                                                        Documento requerido
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            {% if item.documento %}
+                                                {% if item.documento.estado == "APROBADO" %}
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>
+                                                        Aprobado
+                                                    </span>
+                                                {% elif item.documento.estado == "CORRECCION" %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="bi bi-exclamation-circle me-1"></i>
+                                                        Corrección requerida
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-warning text-dark">
+                                                        <i class="bi bi-clock me-1"></i>
+                                                        Pendiente de revisión
+                                                    </span>
+                                                {% endif %}
+
+                                                {% if item.documento.fecha_revision %}
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        Revisado: {{ item.documento.fecha_revision|date:"d/m/Y H:i" }}
+                                                    </small>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-dash-circle me-1"></i>
+                                                    No cargado
+                                                </span>
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if item.documento and item.documento.archivo %}
+                                                <a 
+                                                    href="{{ item.documento.archivo.url }}" 
+                                                    target="_blank" 
+                                                    class="btn btn-sm btn-outline-primary"
+                                                >
+                                                    <i class="bi bi-file-earmark-pdf me-1"></i>
+                                                    Ver PDF
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted small">
+                                                    Sin archivo
+                                                </span>
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if item.documento and item.documento.estado == "APROBADO" %}
+                                                <div class="alert alert-success py-2 px-3 mb-0 small">
+                                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                                    Documento aprobado. No requiere cambios.
+                                                </div>
+                                            {% else %}
+                                                <form
+                                                    method="post"
+                                                    enctype="multipart/form-data"
+                                                    action="{% url 'documento_expediente_upload' solicitud.pk item.valor %}"
+                                                >
+                                                    {% csrf_token %}
+
+                                                    <label for="archivo_{{ item.valor }}" class="form-label small text-muted mb-1">
+                                                        {% if item.documento %}
+                                                            Reemplazar archivo PDF
+                                                        {% else %}
+                                                            Subir archivo PDF
+                                                        {% endif %}
+                                                    </label>
+
+                                                    <div class="input-group input-group-sm">
+                                                        <input 
+                                                            type="file"
+                                                            name="archivo"
+                                                            id="archivo_{{ item.valor }}"
+                                                            class="form-control"
+                                                            accept="application/pdf"
+                                                            required
+                                                        >
+
+                                                        <button type="submit" class="btn btn-primary">
+                                                            {% if item.documento %}
+                                                                Actualizar
+                                                            {% else %}
+                                                                Subir
+                                                            {% endif %}
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+
+                                    {% if item.documento and item.documento.observaciones %}
+                                        <tr>
+                                            <td colspan="4" class="bg-light">
+                                                <div class="small text-danger">
+                                                    <i class="bi bi-chat-left-text me-1"></i>
+                                                    <strong>Observaciones:</strong>
+                                                    {{ item.documento.observaciones }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    {% include "layouts/footer_aspirante.html" %}
+
+</div>
+
+{% endblock %}

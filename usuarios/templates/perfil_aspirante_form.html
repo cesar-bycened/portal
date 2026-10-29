@@ -1,0 +1,576 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+
+{% block title %}
+    Completar perfil
+{% endblock %}
+
+{% block page_title %}
+    Completar perfil
+{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                        <div>
+                            <h1 class="h4 mb-1">
+                                Completar perfil del aspirante
+                            </h1>
+                            <p class="text-muted mb-0">
+                                Captura tu información personal, académica y de contacto para continuar con tu proceso de admisión.
+                            </p>
+                        </div>
+
+                        <a href="{% url 'perfil_usuario' %}" class="btn btn-outline-secondary btn-sm">
+                            Volver
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- DATOS PERSONALES -->
+                        <div class="mb-4">
+                            <h2 class="h6 fw-bold text-uppercase text-muted mb-3">
+                                Datos personales
+                            </h2>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.nombres.id_for_label }}">
+                                        {{ form.nombres.label }}
+                                    </label>
+                                    {{ form.nombres }}
+                                    {% for error in form.nombres.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.apellido_paterno.id_for_label }}">
+                                        {{ form.apellido_paterno.label }}
+                                    </label>
+                                    {{ form.apellido_paterno }}
+                                    {% for error in form.apellido_paterno.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.apellido_materno.id_for_label }}">
+                                        {{ form.apellido_materno.label }}
+                                    </label>
+                                    {{ form.apellido_materno }}
+                                    {% for error in form.apellido_materno.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.fecha_nacimiento.id_for_label }}">
+                                        {{ form.fecha_nacimiento.label }}
+                                    </label>
+                                    {{ form.fecha_nacimiento }}
+                                    {% for error in form.fecha_nacimiento.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.nacionalidad.id_for_label }}">
+                                        {{ form.nacionalidad.label }}
+                                    </label>
+                                    {{ form.nacionalidad }}
+                                    {% for error in form.nacionalidad.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.estado_nacimiento.id_for_label }}">
+                                        {{ form.estado_nacimiento.label }}
+                                    </label>
+                                    {{ form.estado_nacimiento }}
+                                    {% for error in form.estado_nacimiento.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.sexo.id_for_label }}">
+                                        {{ form.sexo.label }}
+                                    </label>
+                                    {{ form.sexo }}
+                                    {% for error in form.sexo.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.estado_civil.id_for_label }}">
+                                        {{ form.estado_civil.label }}
+                                    </label>
+                                    {{ form.estado_civil }}
+                                    {% for error in form.estado_civil.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.curp.id_for_label }}">
+                                        {{ form.curp.label }}
+                                    </label>
+                                    {{ form.curp }}
+                                    {% if form.curp.help_text %}
+                                        <div class="form-text">{{ form.curp.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in form.curp.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.rfc.id_for_label }}">
+                                        {{ form.rfc.label }}
+                                    </label>
+                                    {{ form.rfc }}
+                                    {% if form.rfc.help_text %}
+                                        <div class="form-text">{{ form.rfc.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in form.rfc.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-8 mb-3">
+                                    <label class="form-label" for="{{ form.fotografia.id_for_label }}">
+                                        {{ form.fotografia.label }}
+                                    </label>
+
+                                    {% if form.instance.fotografia %}
+                                        <div class="mb-2">
+                                            <img 
+                                                src="{{ form.instance.fotografia.url }}" 
+                                                alt="Fotografía actual"
+                                                class="rounded border"
+                                                style="width: 90px; height: 90px; object-fit: cover;"
+                                            >
+                                        </div>
+                                    {% endif %}
+
+                                    {{ form.fotografia }}
+
+                                    {% if form.fotografia.help_text %}
+                                        <div class="form-text">{{ form.fotografia.help_text }}</div>
+                                    {% endif %}
+
+                                    {% for error in form.fotografia.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- CONTACTO Y DOMICILIO -->
+                        <div class="mb-4">
+                            <h2 class="h6 fw-bold text-uppercase text-muted mb-3">
+                                Contacto y domicilio
+                            </h2>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="{{ form.telefono_principal.id_for_label }}">
+                                        {{ form.telefono_principal.label }}
+                                    </label>
+                                    {{ form.telefono_principal }}
+                                    {% for error in form.telefono_principal.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="{{ form.telefono_alterno.id_for_label }}">
+                                        {{ form.telefono_alterno.label }}
+                                    </label>
+                                    {{ form.telefono_alterno }}
+                                    {% for error in form.telefono_alterno.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label" for="{{ form.pais_residencia.id_for_label }}">
+                                        {{ form.pais_residencia.label }}
+                                    </label>
+                                    {{ form.pais_residencia }}
+                                    {% for error in form.pais_residencia.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label" for="{{ form.codigo_postal.id_for_label }}">
+                                        {{ form.codigo_postal.label }}
+                                    </label>
+                                    {{ form.codigo_postal }}
+                                    {% for error in form.codigo_postal.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="{{ form.localidad_colonia.id_for_label }}">
+                                        {{ form.localidad_colonia.label }}
+                                    </label>
+                                    {{ form.localidad_colonia }}
+                                    {% for error in form.localidad_colonia.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label class="form-label" for="{{ form.domicilio_calle.id_for_label }}">
+                                        {{ form.domicilio_calle.label }}
+                                    </label>
+                                    {{ form.domicilio_calle }}
+                                    {% for error in form.domicilio_calle.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.numero_domicilio.id_for_label }}">
+                                        {{ form.numero_domicilio.label }}
+                                    </label>
+                                    {{ form.numero_domicilio }}
+                                    {% for error in form.numero_domicilio.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- INFORMACIÓN FAMILIAR -->
+                        <div class="mb-4">
+                            <h2 class="h6 fw-bold text-uppercase text-muted mb-3">
+                                Información familiar
+                            </h2>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        {{ form.tiene_hijos }}
+                                        <label class="form-check-label" for="{{ form.tiene_hijos.id_for_label }}">
+                                            {{ form.tiene_hijos.label }}
+                                        </label>
+                                    </div>
+                                    {% for error in form.tiene_hijos.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        {{ form.dependientes_economicos }}
+                                        <label class="form-check-label" for="{{ form.dependientes_economicos.id_for_label }}">
+                                            {{ form.dependientes_economicos.label }}
+                                        </label>
+                                    </div>
+                                    {% for error in form.dependientes_economicos.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- ANTECEDENTES ACADÉMICOS -->
+                        <div class="mb-4">
+                            <h2 class="h6 fw-bold text-uppercase text-muted mb-3">
+                                Antecedentes académicos
+                            </h2>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.nivel_escolaridad.id_for_label }}">
+                                        {{ form.nivel_escolaridad.label }}
+                                    </label>
+                                    {{ form.nivel_escolaridad }}
+                                    {% for error in form.nivel_escolaridad.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-8 mb-3">
+                                    <label class="form-label" for="{{ form.institucion_procedencia.id_for_label }}">
+                                        {{ form.institucion_procedencia.label }}
+                                    </label>
+                                    {{ form.institucion_procedencia }}
+                                    {% for error in form.institucion_procedencia.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="{{ form.estado_institucion.id_for_label }}">
+                                        {{ form.estado_institucion.label }}
+                                    </label>
+                                    {{ form.estado_institucion }}
+                                    {% for error in form.estado_institucion.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="{{ form.municipio_institucion.id_for_label }}">
+                                        {{ form.municipio_institucion.label }}
+                                    </label>
+                                    {{ form.municipio_institucion }}
+                                    {% for error in form.municipio_institucion.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        {{ form.cuenta_con_titulo }}
+                                        <label class="form-check-label" for="{{ form.cuenta_con_titulo.id_for_label }}">
+                                            {{ form.cuenta_con_titulo.label }}
+                                        </label>
+                                    </div>
+                                    {% for error in form.cuenta_con_titulo.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        {{ form.cuenta_con_cedula }}
+                                        <label class="form-check-label" for="{{ form.cuenta_con_cedula.id_for_label }}">
+                                            {{ form.cuenta_con_cedula.label }}
+                                        </label>
+                                    </div>
+                                    {% for error in form.cuenta_con_cedula.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- INFORMACIÓN LABORAL -->
+                        <div class="mb-4">
+                            <h2 class="h6 fw-bold text-uppercase text-muted mb-3">
+                                Información laboral
+                            </h2>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    {{ form.trabaja_actualmente }}
+                                    <label class="form-check-label" for="{{ form.trabaja_actualmente.id_for_label }}">
+                                        {{ form.trabaja_actualmente.label }}
+                                    </label>
+                                </div>
+                                {% for error in form.trabaja_actualmente.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.lugar_trabajo.id_for_label }}">
+                                        {{ form.lugar_trabajo.label }}
+                                    </label>
+                                    {{ form.lugar_trabajo }}
+                                    {% if form.lugar_trabajo.help_text %}
+                                        <div class="form-text">{{ form.lugar_trabajo.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in form.lugar_trabajo.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.puesto_cargo.id_for_label }}">
+                                        {{ form.puesto_cargo.label }}
+                                    </label>
+                                    {{ form.puesto_cargo }}
+                                    {% if form.puesto_cargo.help_text %}
+                                        <div class="form-text">{{ form.puesto_cargo.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in form.puesto_cargo.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label" for="{{ form.antiguedad_laboral.id_for_label }}">
+                                        {{ form.antiguedad_laboral.label }}
+                                    </label>
+                                    {{ form.antiguedad_laboral }}
+                                    {% if form.antiguedad_laboral.help_text %}
+                                        <div class="form-text">{{ form.antiguedad_laboral.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in form.antiguedad_laboral.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ form.descripcion_actividades.id_for_label }}">
+                                    {{ form.descripcion_actividades.label }}
+                                </label>
+                                {{ form.descripcion_actividades }}
+                                {% if form.descripcion_actividades.help_text %}
+                                    <div class="form-text">{{ form.descripcion_actividades.help_text }}</div>
+                                {% endif %}
+                                {% for error in form.descripcion_actividades.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- INCLUSIÓN Y DIVERSIDAD -->
+                        <div class="mb-4">
+                            <h2 class="h6 fw-bold text-uppercase text-muted mb-3">
+                                Inclusión y diversidad
+                            </h2>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        {{ form.pueblo_originario }}
+                                        <label class="form-check-label" for="{{ form.pueblo_originario.id_for_label }}">
+                                            {{ form.pueblo_originario.label }}
+                                        </label>
+                                    </div>
+                                    {% for error in form.pueblo_originario.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="{{ form.cual_pueblo.id_for_label }}">
+                                        {{ form.cual_pueblo.label }}
+                                    </label>
+                                    {{ form.cual_pueblo }}
+                                    {% if form.cual_pueblo.help_text %}
+                                        <div class="form-text">{{ form.cual_pueblo.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in form.cual_pueblo.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        {{ form.tiene_discapacidad }}
+                                        <label class="form-check-label" for="{{ form.tiene_discapacidad.id_for_label }}">
+                                            {{ form.tiene_discapacidad.label }}
+                                        </label>
+                                    </div>
+                                    {% for error in form.tiene_discapacidad.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        {{ form.tiene_diagnostico }}
+                                        <label class="form-check-label" for="{{ form.tiene_diagnostico.id_for_label }}">
+                                            {{ form.tiene_diagnostico.label }}
+                                        </label>
+                                    </div>
+                                    {% for error in form.tiene_diagnostico.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BOTONES -->
+                        <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top">
+                            <a href="#" class="btn btn-outline-secondary">
+                                Cancelar
+                            </a>
+
+                            <button type="submit" class="btn btn-primary">
+                                Guardar perfil
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% include "layouts/footer.html" %}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% if messages %}
+    {% for message in messages %}
+        <script>
+            Swal.fire({
+                icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}",
+                title: "{% if message.tags == 'error' %}Error{% else %}Correcto{% endif %}",
+                text: "{{ message|escapejs }}",
+                confirmButtonText: "Aceptar",
+                confirmButtonColor: "#0C3F63"
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

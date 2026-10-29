@@ -1,0 +1,120 @@
+{% load static %}
+
+<footer class="mt-auto border-top bg-white">
+    <div class="container py-4">
+
+        <div class="row g-4 align-items-start">
+
+            <!-- Marca institucional -->
+            <div class="col-md-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 38px; height: 38px; background-color: #0C3F63;">
+                        <span class="text-white fw-bold">B</span>
+                    </div>
+
+                    <div class="lh-sm">
+                        <div class="fw-bold text-dark">
+                            Portal SIGEN
+                        </div>
+                        <small class="text-muted">
+                            BYCENED
+                        </small>
+                    </div>
+                </div>
+
+                <p class="text-muted small mb-0">
+                    Plataforma para el seguimiento del proceso de admisión de aspirantes.
+                </p>
+            </div>
+
+            <!-- Accesos rápidos -->
+            <div class="col-md-4">
+                <h2 class="h6 fw-bold text-uppercase text-muted mb-3">
+                    Accesos rápidos
+                </h2>
+
+                <ul class="list-unstyled small mb-0">
+                    <li class="mb-2">
+                        <a href="{% url 'aspirante_dashboard' %}" class="text-decoration-none text-muted">
+                            <i class="bi bi-speedometer2 me-1"></i>
+                            Mi panel
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a href="{% url 'perfil_usuario' %}" class="text-decoration-none text-muted">
+                            <i class="bi bi-person me-1"></i>
+                            Mi perfil
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a href="{% url 'perfil_aspirante' %}" class="text-decoration-none text-muted">
+                            <i class="bi bi-pencil-square me-1"></i>
+                            Editar perfil
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'aspirante_convocatorias_list' %}" class="text-decoration-none text-muted">
+                            <i class="bi bi-megaphone me-1"></i>
+                            Convocatorias
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contacto -->
+            <div class="col-md-4">
+                <h2 class="h6 fw-bold text-uppercase text-muted mb-3">
+                    Contacto
+                </h2>
+
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li class="mb-2">
+                        <i class="bi bi-geo-alt me-1"></i>
+                        Calzada Escuela Normal S/N, Durango, Dgo.
+                    </li>
+
+                    <li class="mb-2">
+                        <i class="bi bi-telephone me-1"></i>
+                        <a href="tel:+526188119478" class="text-decoration-none text-muted">
+                            +52 (618) 811 9478
+                        </a>
+                    </li>
+
+                    <li>
+                        <i class="bi bi-envelope me-1"></i>
+                        <a href="mailto:direccion.bycened@gmail.com" class="text-decoration-none text-muted">
+                            direccion.bycened@gmail.com
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <p class="text-muted small mb-0">
+                © {% now "Y" %} Benemérita y Centenaria Escuela Normal del Estado de Durango.
+            </p>
+
+            <div class="d-flex gap-3 small">
+                <a href="#" class="text-decoration-none text-muted">
+                    Aviso de privacidad
+                </a>
+
+                <form method="post" action="{% url 'cerrar_sesion' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link p-0 text-decoration-none text-danger small">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</footer>

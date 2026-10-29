@@ -1,0 +1,441 @@
+{% extends "layouts/main.html" %}
+
+{% block title %}
+    Aceptados
+{% endblock %}
+
+{% block page_title %}
+    Aceptados
+{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+<div class="container py-4">
+
+    <!-- ENCABEZADO -->
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="h4 mb-1">
+                Aspirantes aceptados
+            </h1>
+
+            <p class="text-muted mb-0">
+                {{ convocatoria.nombre }}
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'convocatorias_detail' convocatoria.pk %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver
+            </a>
+
+            <a href="{% url 'admin_solicitudes_list' %}?convocatoria={{ convocatoria.pk }}" class="btn btn-outline-primary">
+                <i class="bi bi-people me-1"></i>
+                Ver aspirantes
+            </a>
+        </div>
+    </div>
+
+    <!-- ESTADO GENERAL -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Resultados
+                    </p>
+
+                    {% if convocatoria.resultados_publicados %}
+                        <span class="badge bg-success">
+                            Publicados
+                        </span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">
+                            No publicados
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Aspirantes registrados
+                    </p>
+
+                    <p class="h5 mb-0">
+                        {{ total_solicitudes }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        Aceptados
+                    </p>
+
+                    <p class="h5 mb-0">
+                        {{ total_aceptados }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted small mb-1">
+                        No seleccionado 
+                    </p>
+
+                    <p class="h5 mb-0">
+                        {{ total_solicitudes|add:"-"|add:total_aceptados }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RESUMEN POR PROGRAMA -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <h2 class="h5 mb-1">
+                Resumen por programa educativo
+            </h2>
+
+            <p class="text-muted mb-0">
+                Total de aspirantes registrados y aceptados por programa.
+            </p>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Programa educativo</th>
+                            <th>Aspirantes</th>
+                            <th>Aceptados</th>
+                            <th class="text-end">Acción</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for programa in programas %}
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">
+                                        {{ programa.programa_educativo.nombre }}
+                                    </div>
+
+                                    <small class="text-muted">
+                                        {{ programa.programa_educativo.clave }}
+                                    </small>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-primary">
+                                        {{ programa.total_aspirantes }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-success">
+                                        {{ programa.total_aceptados }}
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
+                                    <a 
+                                        href="{% url 'admin_aceptados_convocatoria' convocatoria.pk %}?programa={{ programa.pk }}" 
+                                        class="btn btn-sm btn-outline-primary"
+                                    >
+                                        Gestionar
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    Esta convocatoria no tiene programas activos.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Programa educativo
+                    </label>
+
+                    <select name="programa" class="form-select">
+                        <option value="">Todos los programas</option>
+
+                        {% for programa in programas %}
+                            <option 
+                                value="{{ programa.id }}"
+                                {% if programa_id == programa.id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ programa.programa_educativo.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label">
+                        Buscar
+                    </label>
+
+                    <input 
+                        type="text"
+                        name="q"
+                        value="{{ q|default:'' }}"
+                        class="form-control"
+                        placeholder="Folio, nombre o correo"
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search me-1"></i>
+                        Filtrar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- FORMULARIO DE ACEPTADOS -->
+    <form method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="programa_id" value="{{ programa_id|default:'' }}">
+        <input type="hidden" name="q" value="{{ q|default:'' }}">
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                    <div>
+                        <h2 class="h5 mb-1">
+                            Lista de aspirantes
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Marca los aspirantes aceptados y guarda los cambios.
+                        </p>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        name="accion" 
+                        value="guardar_aceptados" 
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-save me-1"></i>
+                        Guardar aceptados
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+
+                {% if solicitudes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Aceptado</th>
+                                    <th>Folio</th>
+                                    <th>Aspirante</th>
+                                    <th>Programa</th>
+                                    <th>Expediente</th>
+                                    <th>Estado</th>
+                                    <th class="text-end">Revisión</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for solicitud in solicitudes %}
+                                    <tr>
+                                        <td>
+                                            <input 
+                                                type="hidden" 
+                                                name="solicitudes_en_pantalla" 
+                                                value="{{ solicitud.id }}"
+                                            >
+
+                                            <div class="form-check">
+                                                <input 
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    name="aceptados"
+                                                    value="{{ solicitud.id }}"
+                                                    id="aceptado_{{ solicitud.id }}"
+                                                    {% if solicitud.fue_aceptado %}checked{% endif %}
+                                                >
+
+                                                <label class="form-check-label small" for="aceptado_{{ solicitud.id }}">
+                                                    Aceptar
+                                                </label>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <span class="fw-bold">
+                                                {{ solicitud.folio }}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <div class="fw-semibold">
+                                                {% if solicitud.usuario.perfil %}
+                                                    {{ solicitud.usuario.perfil.nombre_completo }}
+                                                {% else %}
+                                                    Sin perfil
+                                                {% endif %}
+                                            </div>
+
+                                            <small class="text-muted">
+                                                {{ solicitud.usuario.email }}
+                                            </small>
+                                        </td>
+
+                                        <td>
+                                            <div class="fw-semibold">
+                                                {{ solicitud.programa_educativo.nombre }}
+                                            </div>
+
+                                            <small class="text-muted">
+                                                {{ solicitud.programa_educativo.clave }}
+                                            </small>
+                                        </td>
+
+                                        <td>
+                                            {% if solicitud.expediente_completo %}
+                                                <span class="badge bg-success">
+                                                    Completo
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">
+                                                    En proceso
+                                                </span>
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if solicitud.fue_aceptado %}
+                                                <span class="badge bg-success">
+                                                    Aceptado
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">
+                                                    No seleccionado
+                                                </span>
+                                            {% endif %}
+                                        </td>
+
+                                        <td class="text-end">
+                                            <a 
+                                                href="{% url 'admin_solicitud_detail' solicitud.pk %}" 
+                                                class="btn btn-sm btn-outline-secondary"
+                                            >
+                                                Revisar expediente
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox fs-1 text-muted"></i>
+
+                        <h3 class="h5 mt-3">
+                            Sin aspirantes encontrados
+                        </h3>
+
+                        <p class="text-muted mb-0">
+                            No hay solicitudes registradas con los filtros seleccionados.
+                        </p>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </form>
+
+    <!-- PUBLICACIÓN DE RESULTADOS -->
+    <div class="card border-0 shadow-sm mt-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+                <div>
+                    <h2 class="h5 mb-1">
+                        Publicación de resultados
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Al publicar resultados, los aspirantes podrán consultar si fueron aceptados o no desde su panel.
+                    </p>
+                </div>
+
+                <form method="post" class="d-flex flex-wrap gap-2">
+                    {% csrf_token %}
+
+                    {% if convocatoria.resultados_publicados %}
+                        <button 
+                            type="submit" 
+                            name="accion" 
+                            value="ocultar_resultados" 
+                            class="btn btn-outline-warning"
+                        >
+                            <i class="bi bi-eye-slash me-1"></i>
+                            Ocultar resultados
+                        </button>
+                    {% else %}
+                        <button 
+                            type="submit" 
+                            name="accion" 
+                            value="publicar_resultados" 
+                            class="btn btn-success"
+                        >
+                            <i class="bi bi-check2-circle me-1"></i>
+                            Publicar resultados
+                        </button>
+                    {% endif %}
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

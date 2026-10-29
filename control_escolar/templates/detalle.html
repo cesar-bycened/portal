@@ -1,0 +1,276 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+
+{% block title %}
+    Ver programa educativo
+{% endblock %}
+
+{% block page_title %}
+    Ver programa educativo
+{% endblock %}
+
+{% block content %}
+
+{% include "layouts/header.html" %}
+
+
+<div class="row justify-content-center">
+    <div class="col-lg-9 col-xl-8">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                        <h1 class="h4 mb-1">
+                            {{ programa.nombre }}
+                        </h1>
+
+                        <p class="text-muted mb-0">
+                            Información general del programa educativo.
+                        </p>
+                    </div>
+
+                    {% if programa.activo %}
+                        <span class="badge bg-success px-3 py-2">
+                            Activo
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary px-3 py-2">
+                            Inactivo
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <div class="border rounded-3 p-3 h-100">
+                            <p class="text-muted small mb-1">
+                                Clave
+                            </p>
+
+                            <h5 class="mb-0">
+                                {{ programa.clave }}
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="border rounded-3 p-3 h-100">
+                            <p class="text-muted small mb-1">
+                                Nivel educativo
+                            </p>
+
+                            <h5 class="mb-0">
+                                {{ programa.get_nivel_display }}
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="border rounded-3 p-3 h-100">
+                            <p class="text-muted small mb-1">
+                                Duración
+                            </p>
+
+                            <h5 class="mb-0">
+                                {% if programa.duracion_semestres %}
+                                    {{ programa.duracion_semestres }} semestres
+                                {% else %}
+                                    <span class="text-muted">
+                                        No especificada
+                                    </span>
+                                {% endif %}
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="border rounded-3 p-3 h-100">
+                            <p class="text-muted small mb-1">
+                                Estado
+                            </p>
+
+                            <h5 class="mb-0">
+                                {% if programa.activo %}
+                                    Disponible para convocatorias
+                                {% else %}
+                                    No disponible
+                                {% endif %}
+                            </h5>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="my-4">
+
+                <div class="mb-4">
+                    <h2 class="h6 fw-bold mb-2">
+                        Descripción
+                    </h2>
+
+                    {% if programa.descripcion %}
+                        <p class="mb-0">
+                            {{ programa.descripcion|linebreaks }}
+                        </p>
+                    {% else %}
+                        <p class="text-muted mb-0">
+                            Este programa educativo no tiene descripción registrada.
+                        </p>
+                    {% endif %}
+                </div>
+
+                <hr class="my-4">
+
+                <div class="row g-3 text-muted small">
+                    <div class="col-md-6">
+                        <strong>Creado:</strong>
+                        {{ programa.creado_en|date:"d/m/Y H:i" }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>Última actualización:</strong>
+                        {{ programa.actualizado_en|date:"d/m/Y H:i" }}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top">
+
+                    <a href="{% url 'programas' %}" class="btn btn-outline-secondary">
+                        Volver
+                    </a>
+
+                    <div class="d-flex gap-2">
+
+                        <a href="{% url 'programas_update' programa.pk %}" class="btn btn-primary">
+                            Editar
+                        </a>
+
+                        <form 
+                            method="post" 
+                            action="{% url 'programas_delete' programa.pk %}" 
+                            class="d-inline form-eliminar-programa"
+                        >
+                            {% csrf_token %}
+
+                            <button 
+                                type="submit" 
+                                class="btn btn-outline-danger"
+                                data-nombre="{{ programa.nombre }}"
+                            >
+                                Eliminar
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer class="text-white py-4 mt-5" style="background-color: #0C3F63;"> 
+    <div class="container">
+        <div class="row g-4 text-center text-md-start">
+            <div class="col-md-4">
+                <h2 class="h6 fw-bold mb-3 text-uppercase">Dirección</h2>
+                <address class="mb-0 small" style="opacity: 0.8;">
+                    Calzada Escuela Normal S/N<br>
+                    Boulevard Lic. Armando del Castillo<br>
+                    Zona Centro, Durango, Dgo. C.P. 34000
+                </address>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="h6 fw-bold mb-3 text-uppercase">Contacto</h2>
+                <ul class="list-unstyled small mb-0" style="opacity: 0.8;">
+                    <li class="mb-1">
+                        <a href="tel:+526188119478" class="text-white text-decoration-none">
+                            +52 (618) 811 9478
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:direccion.bycened@gmail.com" class="text-white text-decoration-none">
+                            direccion.bycened@gmail.com
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="h6 fw-bold mb-3 text-uppercase">Enlaces</h2>
+                <div class="d-flex flex-column gap-2 small" style="opacity: 0.8;">
+                    <a href="#" class="text-white text-decoration-none">
+                        Aviso de Privacidad
+                    </a>
+
+                    <div>
+                        <a href="#" class="text-white text-decoration-none me-3">
+                            <i class="bi bi-facebook"></i> Facebook
+                        </a>
+
+                        <a href="#" class="text-white text-decoration-none">
+                            <i class="bi bi-instagram"></i> Instagram
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const formsEliminar = document.querySelectorAll(".form-eliminar-programa");
+
+        formsEliminar.forEach(function (form) {
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const boton = form.querySelector("button[type='submit']");
+                const nombrePrograma = boton.getAttribute("data-nombre");
+
+                Swal.fire({
+                    title: "¿Eliminar programa educativo?",
+                    text: `Se eliminará: ${nombrePrograma}`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#dc3545",
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+{% if messages %}
+    {% for message in messages %}
+        <script>
+            Swal.fire({
+                icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}",
+                title: "{% if message.tags == 'error' %}Error{% else %}Correcto{% endif %}",
+                text: "{{ message|escapejs }}",
+                confirmButtonText: "Aceptar",
+                confirmButtonColor: "#0C3F63"
+            });
+        </script>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

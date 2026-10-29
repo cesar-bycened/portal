@@ -1,0 +1,770 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+
+{% block title %}
+    Plataforma Institucional | ByCENED
+{% endblock %}
+
+{% block content %}
+
+<style>
+    /*
+    |--------------------------------------------------------------------------
+    | PÁGINA PRINCIPAL
+    |--------------------------------------------------------------------------
+    */
+
+    .institutional-home {
+        position: relative;
+        min-height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+
+        background-image:
+            linear-gradient(
+                135deg,
+                rgba(5, 34, 55, 0.92),
+                rgba(12, 63, 99, 0.83),
+                rgba(50, 112, 153, 0.72)
+            ),
+            url("{% static 'img/bycened/fondo_inicio.jpg' %}");
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+
+        color: #ffffff;
+
+        overflow: hidden;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONTENIDO PRINCIPAL
+    |--------------------------------------------------------------------------
+    */
+
+    .institutional-content {
+        position: relative;
+        z-index: 2;
+
+        flex: 1;
+
+        width: 100%;
+        max-width: 1200px;
+
+        margin: 0 auto;
+
+        padding:
+            50px
+            25px
+            35px;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ENCABEZADO
+    |--------------------------------------------------------------------------
+    */
+
+    .institutional-header {
+        text-align: center;
+        max-width: 900px;
+
+        margin:
+            0 auto
+            42px;
+    }
+
+    .institutional-logo {
+        width: 125px;
+        max-height: 150px;
+
+        object-fit: contain;
+
+        margin-bottom: 16px;
+
+        filter:
+            drop-shadow(
+                0 5px 12px rgba(0, 0, 0, 0.25)
+            );
+    }
+
+    .institution-name {
+        font-size: clamp(1.7rem, 3vw, 2.65rem);
+        line-height: 1.15;
+
+        font-weight: 700;
+
+        margin-bottom: 16px;
+
+        text-shadow:
+            0 3px 12px
+            rgba(0, 0, 0, 0.35);
+    }
+
+    .institution-divider {
+        width: 80px;
+        height: 2px;
+
+        margin:
+            18px auto;
+
+        background:
+            rgba(255, 255, 255, 0.75);
+
+        border-radius: 10px;
+    }
+
+    .institutional-header h2 {
+        font-size: clamp(1.4rem, 2.3vw, 2rem);
+
+        font-weight: 500;
+
+        margin-bottom: 10px;
+
+        color: #edf6fc;
+    }
+
+    .institution-description {
+        max-width: 700px;
+
+        margin: 0 auto;
+
+        color:
+            rgba(255, 255, 255, 0.82);
+
+        font-size: 1rem;
+
+        line-height: 1.6;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TARJETAS
+    |--------------------------------------------------------------------------
+    */
+
+    .access-section {
+        max-width: 1000px;
+
+        margin: 0 auto;
+    }
+
+    .access-card {
+        position: relative;
+
+        height: 100%;
+
+        background:
+            rgba(255, 255, 255, 0.97);
+
+        color: #282C31;
+
+        border-radius: 16px;
+
+        padding:
+            32px
+            30px
+            28px;
+
+        box-shadow:
+            0 15px 45px
+            rgba(0, 0, 0, 0.22);
+
+        border:
+            1px solid
+            rgba(255, 255, 255, 0.30);
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .access-card:hover {
+        transform: translateY(-6px);
+
+        box-shadow:
+            0 22px 50px
+            rgba(0, 0, 0, 0.28);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ICONOS
+    |--------------------------------------------------------------------------
+    */
+
+    .access-icon {
+        width: 72px;
+        height: 72px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background:
+            rgba(12, 63, 99, 0.09);
+
+        color: #0C3F63;
+
+        font-size: 2rem;
+
+        margin-bottom: 20px;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TEXTOS DE TARJETAS
+    |--------------------------------------------------------------------------
+    */
+
+    .access-label {
+        color: #327099;
+
+        font-size: 0.75rem;
+
+        text-transform: uppercase;
+
+        letter-spacing: 1.5px;
+
+        font-weight: 700;
+
+        margin-bottom: 7px;
+    }
+
+    .access-title {
+        font-size: 1.55rem;
+
+        font-weight: 700;
+
+        margin-bottom: 15px;
+
+        color: #20262d;
+    }
+
+    .access-description {
+        color: #66717d;
+
+        line-height: 1.65;
+
+        font-size: 0.95rem;
+
+        min-height: 94px;
+
+        margin-bottom: 25px;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | BOTONES
+    |--------------------------------------------------------------------------
+    */
+
+    .btn-institutional {
+        width: 100%;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 10px;
+
+        padding:
+            12px
+            20px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0C3F63,
+                #327099
+            );
+
+        color: #ffffff;
+
+        border: none;
+
+        border-radius: 8px;
+
+        font-weight: 600;
+
+        text-decoration: none;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            filter 0.2s ease;
+    }
+
+    .btn-institutional:hover {
+        color: #ffffff;
+
+        filter: brightness(1.07);
+
+        box-shadow:
+            0 7px 16px
+            rgba(12, 63, 99, 0.27);
+
+        transform: translateY(-1px);
+    }
+
+    .btn-institutional i {
+        transition:
+            transform 0.2s ease;
+    }
+
+    .btn-institutional:hover i {
+        transform:
+            translateX(4px);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALORES INSTITUCIONALES
+    |--------------------------------------------------------------------------
+    */
+
+    .institutional-values {
+        max-width: 1000px;
+
+        margin:
+            38px auto
+            0;
+
+        padding:
+            20px
+            15px;
+
+        border-top:
+            1px solid
+            rgba(255, 255, 255, 0.17);
+    }
+
+    .value-item {
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        gap: 12px;
+
+        color:
+            rgba(255, 255, 255, 0.84);
+
+        font-size: 0.86rem;
+
+        line-height: 1.3;
+    }
+
+    .value-item i {
+        font-size: 1.5rem;
+
+        color:
+            rgba(255, 255, 255, 0.93);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FOOTER
+    |--------------------------------------------------------------------------
+    */
+
+    .institutional-footer {
+        position: relative;
+        z-index: 2;
+
+        background:
+            rgba(23, 29, 35, 0.86);
+
+        border-top:
+            1px solid
+            rgba(255, 255, 255, 0.08);
+
+        padding:
+            20px
+            20px;
+
+        text-align: center;
+    }
+
+    .institutional-footer-title {
+        margin-bottom: 3px;
+
+        font-size: 0.87rem;
+
+        color:
+            rgba(255, 255, 255, 0.87);
+    }
+
+    .institutional-footer-subtitle {
+        margin: 0;
+
+        font-size: 0.74rem;
+
+        color:
+            rgba(255, 255, 255, 0.53);
+
+        letter-spacing: 2px;
+
+        text-transform: uppercase;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESPONSIVE
+    |--------------------------------------------------------------------------
+    */
+
+    @media (max-width: 991px) {
+
+        .institutional-content {
+            padding-top: 35px;
+        }
+
+        .institutional-logo {
+            width: 105px;
+        }
+
+        .institutional-values {
+            margin-top: 30px;
+        }
+
+        .value-item {
+            justify-content: flex-start;
+        }
+    }
+
+
+    @media (max-width: 767px) {
+
+        .institutional-home {
+            background-attachment: scroll;
+        }
+
+        .institutional-content {
+            padding:
+                30px
+                18px;
+        }
+
+        .institutional-header {
+            margin-bottom: 28px;
+        }
+
+        .institutional-logo {
+            width: 90px;
+        }
+
+        .institution-name {
+            font-size: 1.65rem;
+        }
+
+        .institutional-header h2 {
+            font-size: 1.35rem;
+        }
+
+        .institution-description {
+            font-size: 0.9rem;
+        }
+
+        .access-card {
+            padding:
+                27px
+                24px;
+        }
+
+        .access-description {
+            min-height: auto;
+        }
+
+        .institutional-values {
+            padding:
+                20px
+                5px;
+        }
+    }
+
+
+    @media (max-width: 575px) {
+
+        .institutional-logo {
+            width: 80px;
+        }
+
+        .access-icon {
+            width: 62px;
+            height: 62px;
+
+            font-size: 1.7rem;
+        }
+
+        .access-title {
+            font-size: 1.35rem;
+        }
+    }
+</style>
+
+
+<div class="institutional-home">
+
+    <!-- ============================================================
+         CONTENIDO
+    ============================================================= -->
+
+    <main class="institutional-content">
+
+
+        <!-- ENCABEZADO -->
+
+        <header class="institutional-header">
+
+            <img
+                src="{% static 'images/logofree.png' %}"
+                alt="Benemérita y Centenaria Escuela Normal del Estado de Durango"
+                class="institutional-logo"
+            >
+
+            <h1 class="institution-name">
+                Benemérita y Centenaria
+                <br>
+                Escuela Normal del Estado de Durango
+            </h1>
+
+            <div class="institution-divider"></div>
+
+            <h2>
+                Plataforma Institucional
+            </h2>
+
+            <p class="institution-description">
+                Selecciona el tipo de acceso para ingresar
+                a los servicios digitales de la institución.
+            </p>
+
+        </header>
+
+
+        <!-- ========================================================
+             ACCESOS
+        ========================================================= -->
+
+        <section class="access-section">
+
+            <div class="row justify-content-center g-4">
+
+
+                <!-- ASPIRANTES -->
+
+                <div class="col-lg-5 col-md-6">
+
+                    <article class="access-card">
+
+                        <div class="access-icon">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+
+                        <div class="access-label">
+                            Admisión
+                        </div>
+
+                        <h3 class="access-title">
+                            Aspirantes
+                        </h3>
+
+                        <p class="access-description">
+
+                            Ingresa para iniciar o continuar tu
+                            proceso de admisión, consultar tu
+                            solicitud y dar seguimiento a tu
+                            expediente.
+
+                        </p>
+
+
+                        <a
+                            href="{% url 'login_asp' %}"
+                            class="btn-institutional"
+                        >
+
+                            Ingresar como aspirante
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </a>
+
+                    </article>
+
+                </div>
+
+
+                <!-- COMUNIDAD -->
+
+                <div class="col-lg-5 col-md-6">
+
+                    <article class="access-card">
+
+                        <div class="access-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                        <div class="access-label">
+                            Acceso institucional
+                        </div>
+
+                        <h3 class="access-title">
+                            Comunidad ByCENED
+                        </h3>
+
+                        <p class="access-description">
+
+                            Acceso para alumnos, docentes,
+                            personal administrativo y demás
+                            miembros de la comunidad institucional.
+
+                        </p>
+
+
+                        <a
+                            href="{% url 'login_comunidad' %}"
+                            class="btn-institutional"
+                        >
+
+                            Acceso institucional
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </a>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================================
+             VALORES / INFORMACIÓN INSTITUCIONAL
+        ========================================================= -->
+
+        <section class="institutional-values">
+
+            <div class="row gy-4">
+
+
+                <div class="col-lg-3 col-sm-6">
+
+                    <div class="value-item">
+
+                        <i class="bi bi-book"></i>
+
+                        <span>
+                            Formación
+                            <br>
+                            de excelencia
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-lg-3 col-sm-6">
+
+                    <div class="value-item">
+
+                        <i class="bi bi-people"></i>
+
+                        <span>
+                            Compromiso
+                            <br>
+                            social
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-lg-3 col-sm-6">
+
+                    <div class="value-item">
+
+                        <i class="bi bi-bar-chart"></i>
+
+                        <span>
+                            Educación
+                            <br>
+                            que trasciende
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-lg-3 col-sm-6">
+
+                    <div class="value-item">
+
+                        <i class="bi bi-tree"></i>
+
+                        <span>
+                            Raíces en Durango,
+                            <br>
+                            visión de futuro
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ============================================================
+         FOOTER
+    ============================================================= -->
+
+    <footer class="institutional-footer">
+
+        <div class="institutional-footer-title">
+
+            Benemérita y Centenaria Escuela Normal
+            del Estado de Durango
+
+        </div>
+
+        <p class="institutional-footer-subtitle">
+
+            Sistema de Servicios Digitales
+
+        </p>
+
+    </footer>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,747 @@
+{% extends "layouts/main.html" %}
+
+{% block title %}
+    Estadísticas de aspirantes
+{% endblock %}
+
+{% block page_title %}
+    Estadísticas de aspirantes
+{% endblock %}
+
+{% block content %}
+
+<div class="min-vh-100 d-flex flex-column">
+
+    {% include "layouts/header.html" %}
+
+    <main class="flex-grow-1">
+        <div class="container-fluid px-4 py-4">
+
+            <!-- ENCABEZADO -->
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+                <div>
+                    <h1 class="h4 fw-bold mb-1">
+                        Estadísticas de aspirantes
+                    </h1>
+
+                    <p class="text-muted mb-0">
+                        Consulta indicadores generales, distribución de aspirantes y avance de expedientes.
+                    </p>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'admin_solicitudes_list' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-people me-1"></i>
+                        Ver aspirantes
+                    </a>
+
+                    <a href="{% url 'convocatorias_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Convocatorias
+                    </a>
+                </div>
+            </div>
+
+            <!-- FILTROS -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+
+                    <form method="get" class="row g-3 align-items-end">
+
+                        <div class="col-md-5">
+                            <label for="convocatoria" class="form-label fw-semibold">
+                                Convocatoria
+                            </label>
+
+                            <select name="convocatoria" id="convocatoria" class="form-select">
+                                <option value="">
+                                    Todas las convocatorias
+                                </option>
+
+                                {% for convocatoria in convocatorias %}
+                                    <option value="{{ convocatoria.id }}"
+                                        {% if convocatoria_id == convocatoria.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ convocatoria.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-5">
+                            <label for="programa" class="form-label fw-semibold">
+                                Programa educativo
+                            </label>
+
+                            <select name="programa" id="programa" class="form-select">
+                                <option value="">
+                                    Todos los programas
+                                </option>
+
+                                {% for programa in programas %}
+                                    <option value="{{ programa.id }}"
+                                        {% if programa_id == programa.id|stringformat:"s" %}selected{% endif %}
+                                    >
+                                        {{ programa.programa_educativo.nombre }}
+                                        —
+                                        {{ programa.convocatoria.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-2 d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-funnel me-1"></i>
+                                Filtrar
+                            </button>
+                        </div>
+
+                        {% if convocatoria_id or programa_id %}
+                            <div class="col-12">
+                                <a href="{% url 'admin_aspirantes_estadisticas' %}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-1"></i>
+                                    Limpiar filtros
+                                </a>
+                            </div>
+                        {% endif %}
+
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- RESUMEN GENERAL -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted small mb-1">
+                                        Solicitudes
+                                    </p>
+
+                                    <h2 class="h3 fw-bold mb-0">
+                                        {{ total_solicitudes }}
+                                    </h2>
+                                </div>
+
+                                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center"
+                                     style="width: 46px; height: 46px;">
+                                    <i class="bi bi-file-earmark-text fs-5"></i>
+                                </div>
+                            </div>
+
+                            <small class="text-muted">
+                                Total de aspirantes registrados.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted small mb-1">
+                                        Perfiles
+                                    </p>
+
+                                    <h2 class="h3 fw-bold mb-0">
+                                        {{ total_perfiles }}
+                                    </h2>
+                                </div>
+
+                                <div class="rounded-circle bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center"
+                                     style="width: 46px; height: 46px;">
+                                    <i class="bi bi-person-lines-fill fs-5"></i>
+                                </div>
+                            </div>
+
+                            <small class="text-muted">
+                                Aspirantes con perfil registrado.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted small mb-1">
+                                        Seleccionados
+                                    </p>
+
+                                    <h2 class="h3 fw-bold mb-0">
+                                        {{ total_aceptados }}
+                                    </h2>
+                                </div>
+
+                                <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center"
+                                     style="width: 46px; height: 46px;">
+                                    <i class="bi bi-check-circle fs-5"></i>
+                                </div>
+                            </div>
+
+                            <small class="text-muted">
+                                Aspirantes aceptados en resultados.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-muted small mb-1">
+                                        No seleccionados
+                                    </p>
+
+                                    <h2 class="h3 fw-bold mb-0">
+                                        {{ total_no_seleccionados }}
+                                    </h2>
+                                </div>
+
+                                <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center"
+                                     style="width: 46px; height: 46px;">
+                                    <i class="bi bi-dash-circle fs-5"></i>
+                                </div>
+                            </div>
+
+                            <small class="text-muted">
+                                Solicitudes no seleccionadas en convocatorias publicadas.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- EXPEDIENTES Y DOCUMENTOS -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Avance de expedientes
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Relación entre expedientes completos e incompletos.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-4">
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-sm-6">
+                                    <div class="border rounded-3 p-3 h-100">
+                                        <p class="text-muted small mb-1">
+                                            Expedientes completos
+                                        </p>
+
+                                        <h3 class="h4 fw-bold text-success mb-0">
+                                            {{ total_expedientes_completos }}
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="border rounded-3 p-3 h-100">
+                                        <p class="text-muted small mb-1">
+                                            Expedientes incompletos
+                                        </p>
+
+                                        <h3 class="h4 fw-bold text-warning mb-0">
+                                            {{ total_expedientes_incompletos }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small text-muted">
+                                        Documentos cargados
+                                    </span>
+
+                                    <span class="small fw-semibold">
+                                        {{ porcentaje_carga_documentos }}%
+                                    </span>
+                                </div>
+
+                                <div class="progress" style="height: 10px;">
+                                    <div 
+                                        class="progress-bar"
+                                        role="progressbar"
+                                        style="width: {{ porcentaje_carga_documentos }}%;"
+                                        aria-valuenow="{{ porcentaje_carga_documentos }}"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small text-muted">
+                                        Documentos aprobados
+                                    </span>
+
+                                    <span class="small fw-semibold">
+                                        {{ porcentaje_documentos_aprobados }}%
+                                    </span>
+                                </div>
+
+                                <div class="progress" style="height: 10px;">
+                                    <div 
+                                        class="progress-bar bg-success"
+                                        role="progressbar"
+                                        style="width: {{ porcentaje_documentos_aprobados }}%;"
+                                        aria-valuenow="{{ porcentaje_documentos_aprobados }}"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Documentos
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Estado general de los documentos cargados.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-4">
+
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="border rounded-3 p-3 h-100">
+                                        <p class="text-muted small mb-1">
+                                            Documentos posibles
+                                        </p>
+
+                                        <h3 class="h4 fw-bold mb-0">
+                                            {{ total_documentos_posibles }}
+                                        </h3>
+
+                                        <small class="text-muted">
+                                            {{ total_documentos_requeridos }} documentos por solicitud.
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="border rounded-3 p-3 h-100">
+                                        <p class="text-muted small mb-1">
+                                            Documentos cargados
+                                        </p>
+
+                                        <h3 class="h4 fw-bold text-primary mb-0">
+                                            {{ total_documentos_cargados }}
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="border rounded-3 p-3 h-100">
+                                        <p class="text-muted small mb-1">
+                                            Documentos aprobados
+                                        </p>
+
+                                        <h3 class="h4 fw-bold text-success mb-0">
+                                            {{ total_documentos_aprobados }}
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="border rounded-3 p-3 h-100">
+                                        <p class="text-muted small mb-1">
+                                            Requieren corrección
+                                        </p>
+
+                                        <h3 class="h4 fw-bold text-danger mb-0">
+                                            {{ total_documentos_correccion }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- DISTRIBUCIÓN POR PROGRAMA Y CONVOCATORIA -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Aspirantes por programa
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Distribución de solicitudes por programa educativo.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Programa</th>
+                                            <th class="text-end">Aspirantes</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for item in aspirantes_por_programa %}
+                                            <tr>
+                                                <td>
+                                                    {{ item.convocatoria_programa__programa_educativo__nombre|default:"Sin programa" }}
+                                                </td>
+
+                                                <td class="text-end">
+                                                    <span class="badge bg-primary">
+                                                        {{ item.total }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="2" class="text-center text-muted py-4">
+                                                    No hay información disponible.
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Aspirantes por convocatoria
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Total de solicitudes registradas por convocatoria.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Convocatoria</th>
+                                            <th class="text-end">Aspirantes</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for item in aspirantes_por_convocatoria %}
+                                            <tr>
+                                                <td>
+                                                    {{ item.convocatoria__nombre|default:"Sin convocatoria" }}
+                                                </td>
+
+                                                <td class="text-end">
+                                                    <span class="badge bg-primary">
+                                                        {{ item.total }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="2" class="text-center text-muted py-4">
+                                                    No hay información disponible.
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PERFIL DEL ASPIRANTE -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Sexo
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Distribución registrada en el perfil.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-0">
+                            {% include "tabla_estadistica_simple.html" with datos=aspirantes_por_sexo %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Rango de edad
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Agrupación por edad aproximada.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-0">
+                            {% include "tabla_estadistica_simple.html" with datos=aspirantes_por_edad %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Estado civil
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Información declarada por aspirantes.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-0">
+                            {% include "tabla_estadistica_simple.html" with datos=aspirantes_por_estado_civil %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PROCEDENCIA Y ESCOLARIDAD -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Nivel de escolaridad
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Escolaridad registrada en el perfil.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-0">
+                            {% include "tabla_estadistica_simple.html" with datos=aspirantes_por_escolaridad %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h2 class="h5 fw-bold mb-1">
+                                Estado de nacimiento
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Distribución por entidad registrada.
+                            </p>
+                        </div>
+
+                        <div class="card-body p-0">
+                            {% include "tabla_estadistica_simple.html" with datos=aspirantes_por_estado_nacimiento %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- INSTITUCIONES DE PROCEDENCIA -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h2 class="h5 fw-bold mb-1">
+                        Instituciones de procedencia
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Instituciones registradas por los aspirantes en su perfil.
+                    </p>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Institución</th>
+                                    <th class="text-end">Aspirantes</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for item in aspirantes_por_institucion %}
+                                    <tr>
+                                        <td>
+                                            {{ item.nombre }}
+                                        </td>
+
+                                        <td class="text-end">
+                                            <span class="badge bg-primary">
+                                                {{ item.total }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted py-4">
+                                            No hay información disponible.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INDICADORES SOCIODEMOGRÁFICOS -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h2 class="h5 fw-bold mb-1">
+                        Indicadores sociodemográficos agregados
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Estos datos se muestran de forma agregada para análisis institucional.
+                    </p>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4 col-xl-2">
+                            <div class="border rounded-3 p-3 h-100">
+                                <p class="text-muted small mb-1">
+                                    Trabajan actualmente
+                                </p>
+
+                                <h3 class="h4 fw-bold mb-0">
+                                    {{ total_trabajan }}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl-2">
+                            <div class="border rounded-3 p-3 h-100">
+                                <p class="text-muted small mb-1">
+                                    Tienen hijos
+                                </p>
+
+                                <h3 class="h4 fw-bold mb-0">
+                                    {{ total_con_hijos }}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl-2">
+                            <div class="border rounded-3 p-3 h-100">
+                                <p class="text-muted small mb-1">
+                                    Dependientes económicos
+                                </p>
+
+                                <h3 class="h4 fw-bold mb-0">
+                                    {{ total_con_dependientes }}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl-2">
+                            <div class="border rounded-3 p-3 h-100">
+                                <p class="text-muted small mb-1">
+                                    Pueblo originario
+                                </p>
+
+                                <h3 class="h4 fw-bold mb-0">
+                                    {{ total_pueblo_originario }}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl-2">
+                            <div class="border rounded-3 p-3 h-100">
+                                <p class="text-muted small mb-1">
+                                    Discapacidad
+                                </p>
+
+                                <h3 class="h4 fw-bold mb-0">
+                                    {{ total_discapacidad }}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-xl-2">
+                            <div class="border rounded-3 p-3 h-100">
+                                <p class="text-muted small mb-1">
+                                    Diagnóstico
+                                </p>
+
+                                <h3 class="h4 fw-bold mb-0">
+                                    {{ total_diagnostico }}
+                                </h3>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    {% include "layouts/footer_aspirante.html" %}
+
+</div>
+
+{% endblock %}
