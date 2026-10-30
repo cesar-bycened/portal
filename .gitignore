@@ -3,7 +3,6 @@
 
 # entornos virtuales
 /venv/
-requirements.txt
 
 # python
 __pycache__/
